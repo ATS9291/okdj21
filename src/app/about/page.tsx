@@ -1,117 +1,213 @@
 'use client';
 
-import PageTransition from '@/components/PageTransition';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import SiteNav from '@/components/SiteNav';
+import { NORIGAE_CURSOR } from '@/lib/cursor';
 
-export default function AboutPage() {
-  const router = useRouter();
-  const starsRef = useRef<HTMLDivElement>(null);
+type Person = {
+  name: string;
+  role: string;
+  initials: string;
+  quote: string;
+  story: string;
+  tilt: number;
+};
+
+const PEOPLE: Person[] = [
+  {
+    name: '홍길동',
+    role: '직원',
+    initials: 'ㅎ',
+    quote: '음식은 사람을 연결하는 언어입니다.',
+    story: '어릴 때부터 어머니 곁에서 된장을 담갔습니다. 손맛이란 결국 그 사람의 삶이 배어있는 것이라 믿으며, 오늘도 변하지 않는 맛을 위해 부엌에 섭니다.',
+    tilt: -2,
+  },
+  {
+    name: '김철수',
+    role: '대표',
+    initials: '김',
+    quote: '좋은 재료가 곧 철학입니다.',
+    story: '20년 전, 국내산 콩 100%로만 된장을 담그겠다고 결심했습니다. 빠른 것보다 바른 것을 선택한 그 고집이 지금의 옥된장을 만들었습니다. 매일 아침 항아리를 열어보는 그 설렘은 여전합니다.',
+    tilt: 1.5,
+  },
+];
+
+function PersonCard({ person, delay }: { person: Person; delay: number }) {
+  const [flipped, setFlipped] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!starsRef.current) return;
-    const stars = starsRef.current.querySelectorAll('.star');
-    gsap.to(stars, {
-      rotation: 360,
-      duration: 3,
-      ease: 'none',
-      repeat: -1,
-      stagger: 0.3,
+    if (cardRef.current) {
+      gsap.fromTo(cardRef.current,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay }
+      );
+    }
+  }, [delay]);
+
+  const handleClick = () => {
+    const el = cardRef.current;
+    if (!el) return;
+    gsap.to(el, {
+      rotateY: flipped ? 0 : 180,
+      duration: 0.6, ease: 'power2.inOut',
+      onComplete: () => setFlipped(f => !f),
     });
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onClick={handleClick}
+      style={{
+        opacity: 0,
+        transform: `rotate(${person.tilt}deg)`,
+        cursor: NORIGAE_CURSOR,
+        perspective: 1000,
+        width: '100%',
+        maxWidth: 320,
+      }}
+    >
+      <div style={{
+        position: 'relative',
+        transformStyle: 'preserve-3d',
+        width: '100%',
+      }}>
+        {/* 앞면 */}
+        <div style={{
+          background: '#f5f0e8',
+          padding: '20px 20px 28px',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+          backfaceVisibility: 'hidden',
+        }}>
+          {/* 사진 플레이스홀더 */}
+          <div style={{
+            width: '100%', aspectRatio: '3/4',
+            background: '#2a2a2a',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            marginBottom: 16,
+          }}>
+            <span style={{
+              fontSize: 64, color: 'rgba(200,169,110,0.4)',
+              fontFamily: "'Noto Sans KR', sans-serif", fontWeight: 700,
+            }}>
+              {person.initials}
+            </span>
+          </div>
+          <h3 style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 4,
+          }}>
+            {person.name}
+          </h3>
+          <p style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: 12, color: '#888', marginBottom: 12, letterSpacing: '0.1em',
+          }}>
+            {person.role}
+          </p>
+          <p style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: 13, color: '#444', lineHeight: 1.7,
+            fontStyle: 'italic',
+          }}>
+            "{person.quote}"
+          </p>
+          <p style={{
+            marginTop: 16, fontSize: 10, color: '#bbb',
+            fontFamily: 'sans-serif', textAlign: 'center', letterSpacing: '0.15em',
+          }}>
+            TAP TO READ MORE
+          </p>
+        </div>
+
+        {/* 뒷면 */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: '#1a1a1a',
+          border: '1px solid rgba(200,169,110,0.3)',
+          padding: '32px 24px',
+          backfaceVisibility: 'hidden',
+          transform: 'rotateY(180deg)',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        }}>
+          <p style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: 13, color: 'rgba(255,255,255,0.8)', lineHeight: 2,
+          }}>
+            {person.story}
+          </p>
+          <p style={{
+            marginTop: 24, fontSize: 10, color: 'rgba(200,169,110,0.5)',
+            fontFamily: 'sans-serif', letterSpacing: '0.15em',
+          }}>
+            TAP TO GO BACK
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function AboutPage() {
+  const missionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (missionRef.current) {
+      gsap.fromTo(missionRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.9 }
+      );
+    }
   }, []);
 
   return (
-    <PageTransition>
-      <main className="min-h-screen bg-[#FFD700] p-6 relative overflow-hidden">
-        {/* Floating stars */}
-        <div ref={starsRef} className="absolute inset-0 pointer-events-none">
-          {['★', '☆', '✦', '✧', '⭐'].map((star, i) => (
-            <span
-              key={i}
-              className="star absolute text-4xl opacity-30"
-              style={{
-                left: `${15 + i * 18}%`,
-                top: `${10 + (i % 3) * 25}%`,
-                fontSize: `${30 + i * 8}px`,
-              }}
-            >
-              {star}
-            </span>
+    <main style={{ background: '#0a0a0a', minHeight: '100vh', cursor: NORIGAE_CURSOR }}>
+      <SiteNav />
+
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '120px 32px 100px' }}>
+        <p style={{ fontFamily: 'sans-serif', fontSize: 11, letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 12 }}>
+          ABOUT
+        </p>
+        <h1 style={{
+          fontFamily: "'Noto Sans KR', sans-serif", fontSize: 'clamp(28px, 4vw, 44px)',
+          fontWeight: 300, color: '#fff', marginBottom: 72, lineHeight: 1.3,
+        }}>
+          사람이 만드는 맛
+        </h1>
+
+        {/* 카드 — 직원(좌) 사장(우) */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: 48,
+          justifyItems: 'center',
+          marginBottom: 96,
+        }}>
+          {PEOPLE.map((p, i) => (
+            <PersonCard key={p.name} person={p} delay={0.2 + i * 0.25} />
           ))}
         </div>
 
-        <div className="max-w-2xl mx-auto relative z-10">
-          <button
-            onClick={() => router.push('/')}
-            className="btn-sketch bg-white px-4 py-2 mb-6 text-sm font-black"
-          >
-            ← BACK TO WORLD
-          </button>
-
-          <h1
-            className="text-6xl font-black mb-6 wobble"
-            style={{ fontFamily: "'Comic Sans MS', cursive", textShadow: '4px 4px 0 #111' }}
-          >
-            ✨ ABOUT
-          </h1>
-
-          <div className="bg-white border-4 border-black rounded-2xl p-6 shadow-[8px_8px_0px_#111] mb-6">
-            <h2
-              className="text-3xl font-black mb-3"
-              style={{ fontFamily: "'Comic Sans MS', cursive" }}
-            >
-              KidSuper World
-            </h2>
-            <p
-              className="text-base leading-relaxed font-bold"
-              style={{ fontFamily: "'Comic Sans MS', cursive", color: '#444' }}
-            >
-              KidSuper is a New York-based brand founded by Colm Dillane.
-              It blurs the line between fashion, art, and self-expression.
-              The KidSuper World is a place where creativity has no limits —
-              every building, every wall, every window tells a story.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            {[
-              { label: 'Founded', value: '2010', emoji: '🗓' },
-              { label: 'Based in', value: 'Brooklyn, NYC', emoji: '🌆' },
-              { label: 'Collab w/', value: 'basement.studio', emoji: '💻' },
-              { label: 'Vibe', value: 'Pure Art', emoji: '🎨' },
-            ].map(({ label, value, emoji }) => (
-              <div
-                key={label}
-                className="bg-white border-4 border-black rounded-xl p-4 shadow-[4px_4px_0px_#111] text-center"
-              >
-                <div className="text-3xl mb-1">{emoji}</div>
-                <p
-                  className="text-xs font-bold uppercase"
-                  style={{ fontFamily: "'Comic Sans MS', cursive", color: '#888' }}
-                >
-                  {label}
-                </p>
-                <p
-                  className="text-sm font-black"
-                  style={{ fontFamily: "'Comic Sans MS', cursive" }}
-                >
-                  {value}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <button
-              onClick={() => router.push('/shop')}
-              className="btn-sketch bg-black text-white text-lg font-black px-8 py-3 bounce-slow"
-            >
-              🛍 SHOP THE WORLD
-            </button>
-          </div>
+        {/* 가게 미션 */}
+        <div ref={missionRef} style={{
+          textAlign: 'center',
+          padding: '56px 32px',
+          border: '1px solid rgba(200,169,110,0.2)',
+          opacity: 0,
+        }}>
+          <p style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: 'clamp(18px, 2.5vw, 26px)',
+            fontWeight: 300, color: '#fff',
+            lineHeight: 1.8, letterSpacing: '0.05em',
+          }}>
+            좋은 재료로 정직하게,<br />
+            <span style={{ color: '#c8a96e' }}>매일 같은 맛으로.</span>
+          </p>
         </div>
-      </main>
-    </PageTransition>
+      </div>
+    </main>
   );
 }
