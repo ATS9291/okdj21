@@ -28,6 +28,11 @@ const labelStyle: React.CSSProperties = {
   letterSpacing: '0.1em', marginBottom: 8, display: 'block',
 };
 
+const onFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  (e.target.style.borderColor = 'rgba(200,169,110,0.7)');
+const onBlur  = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  (e.target.style.borderColor = 'rgba(200,169,110,0.25)');
+
 export default function ReservationPage() {
   const formRef = useRef<HTMLFormElement>(null);
   const [toast, setToast]   = useState<{ msg: string; ok: boolean } | null>(null);
@@ -90,15 +95,13 @@ export default function ReservationPage() {
             <div>
               <label style={labelStyle}>이름 *</label>
               <input name="name" required style={inputStyle}
-                onFocus={e => (e.target.style.borderColor = 'rgba(200,169,110,0.7)')}
-                onBlur={e => (e.target.style.borderColor = 'rgba(200,169,110,0.25)')}
+                onFocus={onFocus} onBlur={onBlur}
               />
             </div>
             <div>
               <label style={labelStyle}>연락처 *</label>
               <input name="phone" required type="tel" placeholder="010-0000-0000" style={inputStyle}
-                onFocus={e => (e.target.style.borderColor = 'rgba(200,169,110,0.7)')}
-                onBlur={e => (e.target.style.borderColor = 'rgba(200,169,110,0.25)')}
+                onFocus={onFocus} onBlur={onBlur}
               />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -135,8 +138,7 @@ export default function ReservationPage() {
               <textarea name="notes" rows={4}
                 placeholder="알레르기, 기념일, 좌석 요청 등"
                 style={{ ...inputStyle, resize: 'vertical' }}
-                onFocus={e => (e.target.style.borderColor = 'rgba(200,169,110,0.7)')}
-                onBlur={e => (e.target.style.borderColor = 'rgba(200,169,110,0.25)')}
+                onFocus={onFocus} onBlur={onBlur}
               />
             </div>
             <button

@@ -5,12 +5,9 @@ import Link from 'next/link';
 import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
 import { supabase, type BlogPost } from '@/lib/supabase';
+import { formatDate } from '@/lib/format';
 
 const CATEGORIES = ['전체', '장사노하우', '재료이야기', '레시피', '일상'];
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-}
 
 export default function BlogPage() {
   const [posts, setPosts]   = useState<BlogPost[]>([]);
@@ -18,6 +15,7 @@ export default function BlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
       setLoading(true);
       let q = supabase
@@ -27,9 +25,9 @@ export default function BlogPage() {
         .order('created_at', { ascending: false });
       if (cat !== '전체') q = q.eq('category', cat);
       const { data } = await q;
-      setPosts(data ?? []);
-      setLoading(false);
+      if (!cancelled) { setPosts(data ?? []); setLoading(false); }
     })();
+    return () => { cancelled = true; };
   }, [cat]);
 
   return (

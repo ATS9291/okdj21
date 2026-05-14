@@ -5,10 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
 import { supabase, type BlogPost } from '@/lib/supabase';
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-}
+import { formatDate } from '@/lib/format';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +15,7 @@ export default function BlogPostPage() {
 
   useEffect(() => {
     if (!slug) return;
+    let cancelled = false;
     (async () => {
       const { data } = await supabase
         .from('blog_posts')
@@ -25,11 +23,13 @@ export default function BlogPostPage() {
         .eq('slug', slug)
         .eq('published', true)
         .single();
+      if (cancelled) return;
       if (!data) { router.push('/blog'); return; }
       setPost(data);
       setLoading(false);
     })();
-  }, [slug, router]);
+    return () => { cancelled = true; };
+  }, [slug]); // router is stable in Next.js App Router
 
   if (loading) {
     return (

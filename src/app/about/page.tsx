@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
@@ -34,26 +34,24 @@ const PEOPLE: Person[] = [
 ];
 
 function PersonCard({ person, delay }: { person: Person; delay: number }) {
-  const [flipped, setFlipped] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const flippedRef = useRef(false);
+  const cardRef    = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (cardRef.current) {
+    const ctx = gsap.context(() => {
       gsap.fromTo(cardRef.current,
         { opacity: 0, y: 50 },
         { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay }
       );
-    }
+    });
+    return () => ctx.revert();
   }, [delay]);
 
   const handleClick = () => {
     const el = cardRef.current;
     if (!el) return;
-    gsap.to(el, {
-      rotateY: flipped ? 0 : 180,
-      duration: 0.6, ease: 'power2.inOut',
-      onComplete: () => setFlipped(f => !f),
-    });
+    flippedRef.current = !flippedRef.current;
+    gsap.to(el, { rotateY: flippedRef.current ? 180 : 0, duration: 0.6, ease: 'power2.inOut' });
   };
 
   return (
@@ -154,12 +152,13 @@ export default function AboutPage() {
   const missionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (missionRef.current) {
+    const ctx = gsap.context(() => {
       gsap.fromTo(missionRef.current,
         { opacity: 0, y: 30 },
         { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.9 }
       );
-    }
+    });
+    return () => ctx.revert();
   }, []);
 
   return (

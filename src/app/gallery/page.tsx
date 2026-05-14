@@ -21,18 +21,19 @@ export default function GalleryPage() {
   const titleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (titleRef.current) {
+    const ctx = gsap.context(() => {
       gsap.fromTo(titleRef.current,
         { opacity: 0, y: 30 },
         { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.3 }
       );
-    }
-    if (cardsRef.current) {
-      gsap.fromTo(cardsRef.current.children,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1, delay: 0.5 }
-      );
-    }
+      if (cardsRef.current) {
+        gsap.fromTo(cardsRef.current.children,
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1, delay: 0.5 }
+        );
+      }
+    });
+    return () => ctx.revert();
   }, []);
 
   return (

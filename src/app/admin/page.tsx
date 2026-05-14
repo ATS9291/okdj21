@@ -35,6 +35,26 @@ export default function AdminPage() {
   const [formMsg, setFormMsg] = useState('');
   const [isPending, startTransition] = useTransition();
 
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      let q = supabase.from('reservations').select('*').order('date').order('time');
+      if (dateFilter) q = q.eq('date', dateFilter);
+      const { data } = await q;
+      if (!cancelled) setReservations(data ?? []);
+    };
+    load();
+    return () => { cancelled = true; };
+  }, [dateFilter]);
+
+  useEffect(() => {
+    if (tab !== 'blog') return;
+    let cancelled = false;
+    supabase.from('blog_posts').select('*').order('created_at', { ascending: false })
+      .then(({ data }) => { if (!cancelled) setPosts(data ?? []); });
+    return () => { cancelled = true; };
+  }, [tab]);
+
   const loadReservations = async () => {
     let q = supabase.from('reservations').select('*').order('date').order('time');
     if (dateFilter) q = q.eq('date', dateFilter);
@@ -46,9 +66,6 @@ export default function AdminPage() {
     const { data } = await supabase.from('blog_posts').select('*').order('created_at', { ascending: false });
     setPosts(data ?? []);
   };
-
-  useEffect(() => { loadReservations(); }, [dateFilter]);
-  useEffect(() => { if (tab === 'blog') loadPosts(); }, [tab]);
 
   const changeStatus = (id: string, status: 'confirmed' | 'cancelled') => {
     startTransition(async () => {
