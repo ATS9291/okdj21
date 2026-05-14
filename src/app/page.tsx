@@ -1,65 +1,66 @@
-import Image from "next/image";
+'use client';
+
+import HoverColorReveal, { ClickZone } from '@/components/HoverColorReveal';
+
+// ── 클릭 존 설정 ────────────────────────────────────────────────────────────
+// x, y, w, h 모두 화면 기준 % 값
+// 이미지 레이아웃에 맞게 숫자를 조정하세요
+// 옥된장 파사드 영역에 맞게 x, y, w, h (화면 % 기준) 조정
+const ZONES: ClickZone[] = [
+  { id: 'gallery', label: '', href: '/gallery', x: 20, y: 35, w: 36, h: 47 },
+];
+
+const SOCIAL_LINKS = [
+  { label: '인스타그램', href: 'https://www.instagram.com/' },
+  { label: '유튜브',    href: 'https://www.youtube.com/' },
+  { label: '스레드',   href: 'https://www.threads.net/' },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+    <main className="w-screen h-screen overflow-hidden bg-black" style={{ position: 'relative' }}>
+      <HoverColorReveal
+        src="/옥된장메인.svg"
+        radius={200}
+        softness={0.5}
+        zones={ZONES}
+      />
+
+      {/* 소셜 미디어 링크 */}
+      <div style={{
+        position: 'fixed',
+        bottom: 24,
+        right: 28,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 20,
+        zIndex: 200,
+        pointerEvents: 'auto',
+      }}>
+        {SOCIAL_LINKS.map(({ label, href }) => (
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            key={label}
+            href={href}
             target="_blank"
             rel="noopener noreferrer"
+            style={{
+              color: 'rgba(0,0,0,0.82)',
+              textDecoration: 'none',
+              fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '0.06em',
+              textShadow: '0 0 8px rgba(255,255,255,0.7)',
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(0,0,0,1)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(0,0,0,0.82)')}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
+            {label}
           </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        ))}
+      </div>
+    </main>
   );
 }
