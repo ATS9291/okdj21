@@ -5,8 +5,6 @@ import type { Reservation } from '@/lib/supabase';
 import { supabase } from '@/lib/supabase';
 import { updateReservationStatus } from '@/app/actions';
 
-export const metadata = { title: '예약 관리' };
-
 const STATUS_LABEL: Record<string, string> = { pending: '대기', confirmed: '확정', cancelled: '취소' };
 const STATUS_COLOR: Record<string, string> = { pending: '#c8a96e', confirmed: '#6ec87a', cancelled: '#e06060' };
 
@@ -36,7 +34,16 @@ export default function ReservationsPage() {
     setRows(data ?? []);
   };
 
-  useEffect(() => { load(dateFilter); }, [dateFilter]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      let q = supabase.from('reservations').select('*').order('date').order('time');
+      if (dateFilter) q = q.eq('date', dateFilter);
+      const { data } = await q;
+      if (!cancelled) setRows(data ?? []);
+    })();
+    return () => { cancelled = true; };
+  }, [dateFilter]);
 
   const changeStatus = (id: string, status: 'confirmed' | 'cancelled') => {
     startTransition(async () => {

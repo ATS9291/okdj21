@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTransition } from 'react';
 import { adminLogout } from '@/app/actions';
 
 const NAV = [
@@ -43,7 +42,6 @@ const S = {
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [, startTransition] = useTransition();
 
   return (
     <aside style={S.sidebar}>
@@ -54,7 +52,7 @@ export default function Sidebar() {
 
       <nav style={S.nav}>
         {NAV.map(({ href, label }) => {
-          const active = pathname.startsWith(href);
+          const active = pathname === href || pathname.startsWith(href + '/');
           return (
             <Link key={href} href={href} style={{
               display: 'block', padding: '11px 24px',
@@ -73,7 +71,7 @@ export default function Sidebar() {
       </nav>
 
       <div style={S.logoutArea}>
-        <button onClick={() => startTransition(() => adminLogout())} style={S.logoutBtn}>
+        <button onClick={() => adminLogout()} style={S.logoutBtn}>
           로그아웃
         </button>
       </div>

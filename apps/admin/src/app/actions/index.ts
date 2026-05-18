@@ -4,9 +4,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createDb } from '@okdoenjang/database';
 
-function db() {
-  return createDb();
-}
+const client = createDb();
 
 export async function adminLogin(formData: FormData) {
   const pw = formData.get('password') as string;
@@ -25,13 +23,12 @@ export async function adminLogout() {
 }
 
 export async function updateReservationStatus(id: string, status: 'confirmed' | 'cancelled') {
-  const { error } = await db().from('reservations').update({ status }).eq('id', id);
+  const { error } = await client.from('reservations').update({ status }).eq('id', id);
   if (error) return { error: error.message };
   return { success: true };
 }
 
 export async function saveBlogPost(formData: FormData) {
-  const client = db();
   const id = formData.get('id') as string | null;
   const title = formData.get('title') as string;
   const slug = formData.get('slug') as string;
@@ -57,7 +54,7 @@ export async function saveBlogPost(formData: FormData) {
 }
 
 export async function deleteBlogPost(id: string) {
-  const { error } = await db().from('blog_posts').delete().eq('id', id);
+  const { error } = await client.from('blog_posts').delete().eq('id', id);
   if (error) return { error: error.message };
   return { success: true };
 }

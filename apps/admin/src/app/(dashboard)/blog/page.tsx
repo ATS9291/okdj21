@@ -148,7 +148,7 @@ export default function BlogPage() {
         </form>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         {posts.map(p => (
           <div key={p.id} style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
