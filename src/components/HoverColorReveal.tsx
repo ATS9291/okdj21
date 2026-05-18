@@ -252,14 +252,14 @@ export default function HoverColorReveal({ src, radius = 200, softness = 0.6, zo
     });
 
     const tl = gsap.timeline();
-    // 줌인 3.7초, 1.1초 시점부터 함께 어두워지며 줌인 끝과 동시에 완료
+    // 줌인 시작과 동시에 페이드, 같은 duration으로 자연스럽게 완료
     tl.to(wrapper, { scale: 7, x: tx, y: ty, duration: 3.7, ease: 'power1.inOut' }, 0)
       .to(overlay, {
         opacity: 1,
-        duration: 2.6,
+        duration: 2.5,
         ease: 'power2.in',
         onComplete: () => router.push(href),
-      }, 1.1);
+      }, 0);
   }, [router]);
 
   // ── 97% 이전 조기 클릭: 전체 채색 후 이동 ─────────────────────────────

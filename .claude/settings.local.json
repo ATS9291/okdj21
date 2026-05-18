@@ -18,7 +18,10 @@
       "Bash(npx playwright *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(node -e \"require\\('@supabase/supabase-js'\\); console.log\\('ok'\\)\")"
+      "Bash(node -e \"require\\('@supabase/supabase-js'\\); console.log\\('ok'\\)\")",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(xargs grep *)"
     ]
   }
 }

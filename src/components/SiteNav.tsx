@@ -41,33 +41,13 @@ export default function SiteNav() {
         fontFamily: "'Noto Sans KR', sans-serif",
         fontSize: 18,
         fontWeight: 700,
-        color: '#c8a96e',
+        color: '#1a5c2a',
         textDecoration: 'none',
         letterSpacing: '0.08em',
       }}>
-        옥된장
+        옥된장양재점
       </Link>
 
-      <div style={{ display: 'flex', gap: 32 }}>
-        {NAV_LINKS.map(({ label, href }) => {
-          const active = pathname === href;
-          return (
-            <Link key={href} href={href} style={{
-              fontFamily: "'Noto Sans KR', sans-serif",
-              fontSize: 13,
-              fontWeight: active ? 700 : 400,
-              color: active ? '#c8a96e' : 'rgba(255,255,255,0.75)',
-              textDecoration: 'none',
-              letterSpacing: '0.06em',
-              borderBottom: active ? '1px solid #c8a96e' : '1px solid transparent',
-              paddingBottom: 2,
-              transition: 'color 0.2s, border-bottom 0.2s',
-            }}>
-              {label}
-            </Link>
-          );
-        })}
-      </div>
     </nav>
   );
 }
