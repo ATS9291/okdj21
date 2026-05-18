@@ -1,97 +1,103 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import SiteNav from '@/components/SiteNav';
-import { NORIGAE_CURSOR } from '@/lib/cursor';
+import { notFound } from 'next/navigation';
+import { cache } from 'react';
+import type { Metadata } from 'next';
 import { supabase, type BlogPost } from '@/lib/supabase';
-import { formatDate } from '@/lib/format';
+import BlogPostClient from './BlogPostClient';
 
-export default function BlogPostPage() {
-  const { slug } = useParams<{ slug: string }>();
-  const router   = useRouter();
-  const [post, setPost]     = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://okdoenjang.com';
 
-  useEffect(() => {
-    if (!slug) return;
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('slug', slug)
-        .eq('published', true)
-        .single();
-      if (cancelled) return;
-      if (!data) { router.push('/blog'); return; }
-      setPost(data);
-      setLoading(false);
-    })();
-    return () => { cancelled = true; };
-  }, [slug]); // router is stable in Next.js App Router
+const getPost = cache(async (slug: string): Promise<BlogPost | null> => {
+  const { data } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('slug', slug)
+    .eq('published', true)
+    .single();
+  return data ?? null;
+});
 
-  if (loading) {
-    return (
-      <main style={{ background: '#0a0a0a', minHeight: '100vh' }}>
-        <SiteNav />
-      </main>
-    );
-  }
+type Props = { params: Promise<{ slug: string }> };
 
-  if (!post) return null;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPost(slug);
+  if (!post) return { title: '포스트를 찾을 수 없습니다' };
+
+  const description = post.excerpt ?? post.content.slice(0, 160);
+
+  return {
+    title: post.title,
+    description,
+    openGraph: {
+      title: post.title,
+      description,
+      type: 'article',
+      publishedTime: post.created_at,
+      locale: 'ko_KR',
+      images: post.cover_image_url ? [{ url: post.cover_image_url, alt: post.title }] : [],
+    },
+    alternates: {
+      canonical: `${SITE_URL}/blog/${post.slug}`,
+    },
+  };
+}
+
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = await getPost(slug);
+  if (!post) notFound();
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt ?? post.content.slice(0, 160),
+    url: `${SITE_URL}/blog/${post.slug}`,
+    datePublished: post.created_at,
+    dateModified: post.created_at,
+    inLanguage: 'ko-KR',
+    author: {
+      '@type': 'Organization',
+      name: '옥된장',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '옥된장',
+      url: SITE_URL,
+    },
+    ...(post.cover_image_url && {
+      image: { '@type': 'ImageObject', url: post.cover_image_url },
+    }),
+    keywords: post.category,
+    articleSection: post.category,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/blog/${post.slug}`,
+    },
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '홈', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: '블로그', item: `${SITE_URL}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+    ],
+  };
 
   return (
-    <main style={{ background: '#0a0a0a', minHeight: '100vh', cursor: NORIGAE_CURSOR }}>
-      <SiteNav />
-
-      {post.cover_image_url && (
-        <div style={{
-          width: '100%', height: '45vh',
-          background: `url(${post.cover_image_url}) center/cover`,
-          marginTop: 64,
-        }} />
-      )}
-
-      <div style={{
-        maxWidth: 680, margin: '0 auto',
-        padding: post.cover_image_url ? '60px 32px 100px' : '140px 32px 100px',
-      }}>
-        <button onClick={() => router.push('/blog')} style={{
-          background: 'transparent', border: 'none',
-          color: 'rgba(200,169,110,0.7)', fontFamily: 'sans-serif', fontSize: 12,
-          letterSpacing: '0.15em', cursor: NORIGAE_CURSOR, marginBottom: 40,
-          padding: 0,
-        }}>
-          ← 목록으로
-        </button>
-
-        <span style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c8a96e', letterSpacing: '0.25em' }}>
-          {post.category}
-        </span>
-        <h1 style={{
-          fontFamily: "'Noto Sans KR', sans-serif",
-          fontSize: 'clamp(22px, 3.5vw, 36px)', fontWeight: 500,
-          color: '#fff', margin: '12px 0 8px', lineHeight: 1.5,
-        }}>
-          {post.title}
-        </h1>
-        <p style={{
-          fontFamily: 'sans-serif', fontSize: 11,
-          color: 'rgba(255,255,255,0.25)', marginBottom: 56,
-        }}>
-          {formatDate(post.created_at)}
-        </p>
-
-        <div style={{
-          fontFamily: "'Noto Sans KR', sans-serif",
-          fontSize: 15, color: 'rgba(255,255,255,0.75)',
-          lineHeight: 2.1,
-          whiteSpace: 'pre-wrap',
-        }}>
-          {post.content}
-        </div>
-      </div>
-    </main>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <BlogPostClient post={post} />
+    </>
   );
 }
