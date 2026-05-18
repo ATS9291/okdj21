@@ -21,7 +21,12 @@
       "Bash(node -e \"require\\('@supabase/supabase-js'\\); console.log\\('ok'\\)\")",
       "Bash(git commit *)",
       "Bash(git push *)",
-      "Bash(xargs grep *)"
+      "Bash(xargs grep *)",
+      "Bash(cp -r src apps/landing/src)",
+      "Bash(cp -r public apps/landing/public)",
+      "Bash(cp next.config.ts postcss.config.mjs eslint.config.mjs apps/landing/)",
+      "Bash(cp playwright.config.ts apps/landing/)",
+      "Bash(cp next-env.d.ts apps/landing/)"
     ]
   }
 }

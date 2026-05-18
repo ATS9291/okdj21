@@ -1,10 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 
-const url  = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const key  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(url, key);
-
 export type Reservation = {
   id: string;
   name: string;
@@ -28,3 +23,10 @@ export type BlogPost = {
   published: boolean;
   created_at: string;
 };
+
+export function createDb() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}

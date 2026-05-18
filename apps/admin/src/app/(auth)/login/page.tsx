@@ -1,18 +1,9 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { adminLogin } from '@/app/actions/admin';
+import { adminLogin } from '@/app/actions';
 
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '14px 16px',
-  background: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(200,169,110,0.3)',
-  borderRadius: 3, color: '#fff',
-  fontFamily: "'Noto Sans KR', sans-serif", fontSize: 14,
-  outline: 'none', boxSizing: 'border-box',
-};
-
-export default function AdminLoginPage() {
+export default function LoginPage() {
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 
@@ -50,7 +41,14 @@ export default function AdminLoginPage() {
           <input
             name="password" type="password" required
             placeholder="비밀번호"
-            style={inputStyle}
+            style={{
+              width: '100%', padding: '14px 16px',
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(200,169,110,0.3)',
+              borderRadius: 3, color: '#fff',
+              fontFamily: "'Noto Sans KR', sans-serif", fontSize: 14,
+              outline: 'none', boxSizing: 'border-box',
+            }}
           />
           {error && (
             <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 12, color: '#e06060' }}>
@@ -60,8 +58,7 @@ export default function AdminLoginPage() {
           <button type="submit" disabled={isPending} style={{
             padding: '14px', background: '#c8a96e', color: '#000',
             fontFamily: "'Noto Sans KR', sans-serif", fontSize: 14, fontWeight: 700,
-            border: 'none', cursor: isPending ? 'wait' : 'pointer',
-            borderRadius: 3,
+            border: 'none', cursor: isPending ? 'wait' : 'pointer', borderRadius: 3,
           }}>
             {isPending ? '확인 중...' : '로그인'}
           </button>
