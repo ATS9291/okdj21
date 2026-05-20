@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { supabase, type BlogPost } from '@/lib/supabase';
 import BlogPostClient from './BlogPostClient';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://okdoenjang.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://okdj21.com';
 
 const getPost = cache(async (slug: string): Promise<BlogPost | null> => {
   const { data } = await supabase

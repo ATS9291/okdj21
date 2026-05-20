@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Script from 'next/script';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://okdoenjang.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://okdj21.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
