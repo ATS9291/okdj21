@@ -29,7 +29,7 @@ export default function Home() {
       {/* 소셜 미디어 링크 */}
       <div style={{
         position: 'fixed',
-        bottom: 24,
+        top: 24,
         right: 28,
         display: 'flex',
         flexDirection: 'row',
