@@ -1,19 +1,10 @@
 'use client';
 
 import HoverColorReveal, { ClickZone } from '@/components/HoverColorReveal';
+import { SOCIAL_LINKS } from '@/lib/constants';
 
-// ── 클릭 존 설정 ────────────────────────────────────────────────────────────
-// x, y, w, h 모두 화면 기준 % 값
-// 이미지 레이아웃에 맞게 숫자를 조정하세요
-// 옥된장 파사드 영역에 맞게 x, y, w, h (화면 % 기준) 조정
 const ZONES: ClickZone[] = [
   { id: 'start', label: '', href: '/start', x: 20, y: 35, w: 36, h: 47 },
-];
-
-const SOCIAL_LINKS = [
-  { label: '인스타그램', href: 'https://www.instagram.com/' },
-  { label: '유튜브',    href: 'https://www.youtube.com/' },
-  { label: '스레드',   href: 'https://www.threads.net/' },
 ];
 
 export default function Home() {
@@ -29,35 +20,40 @@ export default function Home() {
       {/* 소셜 미디어 링크 */}
       <div style={{
         position: 'fixed',
-        top: 24,
+        top: 20,
         right: 28,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 20,
+        gap: 24,
         zIndex: 200,
         pointerEvents: 'auto',
       }}>
-        {SOCIAL_LINKS.map(({ label, href }) => (
+        {SOCIAL_LINKS.map(({ ko, en, href }) => (
           <a
-            key={label}
+            key={en}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
             style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
               color: 'rgba(0,0,0,0.82)',
               textDecoration: 'none',
-              fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
-              fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: '0.06em',
               textShadow: '0 0 8px rgba(255,255,255,0.7)',
               transition: 'color 0.2s',
             }}
             onMouseEnter={e => (e.currentTarget.style.color = 'rgba(0,0,0,1)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'rgba(0,0,0,0.82)')}
           >
-            {label}
+            <span style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
+              fontSize: 16, fontWeight: 600, letterSpacing: '0.04em', lineHeight: 1,
+            }}>{ko}</span>
+            <span style={{
+              fontFamily: 'sans-serif',
+              fontSize: 10, fontWeight: 400, letterSpacing: '0.2em', lineHeight: 1,
+              opacity: 0.65,
+            }}>{en}</span>
           </a>
         ))}
       </div>

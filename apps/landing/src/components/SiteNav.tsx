@@ -39,7 +39,7 @@ export default function SiteNav() {
     }}>
       <Link href="/start" style={{
         fontFamily: "'Noto Sans KR', sans-serif",
-        fontSize: 18,
+        fontSize: 30,
         fontWeight: 700,
         color: '#1a5c2a',
         textDecoration: 'none',

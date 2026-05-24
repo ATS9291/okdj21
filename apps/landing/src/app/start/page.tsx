@@ -5,17 +5,18 @@ import Link from 'next/link';
 import gsap from 'gsap';
 import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
+import { SOCIAL_LINKS } from '@/lib/constants';
 
-const SOCIAL_LINKS = [
-  { label: 'Instagram', href: 'https://www.instagram.com/' },
-  { label: 'Threads',   href: 'https://www.threads.net/' },
-  { label: 'YouTube',   href: 'https://www.youtube.com/' },
+const MENU_ITEMS = [
+  { num: '01', name: '된장전골',  en: 'DOENJANG JJEONGOL',  desc: '20년 숙성 항아리 된장 베이스', price: '13,000', img: '/menu-된장전골.jpg',  href: '/menu#doenjang' },
+  { num: '02', name: '순두부전골', en: 'SUNDUBU JJEONGOL',   desc: '부드러운 순두부와 해물의 조화', price: '14,000', img: '/menu-순두부전골.jpg', href: '/menu#sundubu' },
+  { num: '03', name: '수육전골',  en: 'SUYUK JJEONGOL',     desc: '국내산 수육과 된장의 깊은 맛', price: '55,000', img: '/menu-수육전골.jpg',  href: '/menu#sukyuk' },
+  { num: '04', name: '별미차림',  en: 'BYEOLMI CHARIM',     desc: '계절 재료로 차린 별미 한상', price: '20,000', img: '/menu-별미차림.jpg',  href: '/menu#byeolmi' },
 ];
 
 const SECTIONS = [
-  { label: '대표 메뉴', sub: '된장 · 순두부 · 전골 · 미나리전', href: '/menu',  tag: 'MENU' },
-  { label: '소개',      sub: '사장님과 직원 이야기',             href: '/about', tag: 'ABOUT' },
-  { label: '블로그',    sub: '장사 노하우 · 재료 이야기',       href: '/blog',  tag: 'BLOG' },
+  { label: '소개',   sub: '사장님과 직원 이야기',       href: '/about', tag: 'ABOUT' },
+  { label: '블로그', sub: '장사 노하우 · 재료 이야기',   href: '/blog',  tag: 'BLOG' },
 ];
 
 const YOUTUBE_VIDEO_ID = 'VIDEO_ID_HERE';
@@ -24,6 +25,7 @@ export default function StartPage() {
   const titleRef = useRef<HTMLDivElement>(null);
   const [showWidget, setShowWidget] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [hoveredMenu, setHoveredMenu] = useState<number | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -64,13 +66,13 @@ export default function StartPage() {
         <div ref={titleRef} style={{ position: 'absolute', bottom: 100, left: 0, right: 0, textAlign: 'center', opacity: 0 }}>
           <h1 style={{
             fontFamily: "'Noto Sans KR', sans-serif",
-            fontSize: 'clamp(48px, 6.5vw, 72px)',
+            fontSize: 'clamp(35px, 5.2vw, 59px)',
             fontWeight: 800, color: '#fff',
             letterSpacing: '0.06em', lineHeight: 1.2,
             whiteSpace: 'nowrap',
             textShadow: '0 2px 32px rgba(0,0,0,0.6), 0 0 80px rgba(200,169,110,0.18)',
           }}>
-            오늘 행동이 내일의 기준이 된다
+            우리의 미친짓이 내일의 기준이 된다
           </h1>
         </div>
         <div style={{
@@ -82,6 +84,119 @@ export default function StartPage() {
           <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
             <path d="M7 0v16M1 10l6 6 6-6" stroke="rgba(200,169,110,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
+        </div>
+      </section>
+
+      {/* ── 대표 메뉴 (seed.com 스타일 4패널) ──────────────── */}
+      <section style={{
+        position: 'relative', width: '100%', height: '100vh',
+        display: 'flex', flexDirection: 'column',
+        background: '#0a0a0a',
+        borderTop: '1px solid rgba(200,169,110,0.07)',
+        overflow: 'hidden',
+      }}>
+        <div style={{ padding: '44px clamp(40px, 9vw, 140px) 0', flexShrink: 0 }}>
+          <p style={{ fontFamily: 'sans-serif', fontSize: 11, letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 10 }}>MENU</p>
+          <h2 style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: 'clamp(28px, 3.5vw, 44px)',
+            fontWeight: 300, color: '#fff', letterSpacing: '0.05em',
+          }}>대표 메뉴</h2>
+        </div>
+
+        <div style={{ flex: 1, display: 'flex', marginTop: 28 }}>
+          {MENU_ITEMS.map((item, i) => {
+            const isHovered = hoveredMenu === i;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onMouseEnter={() => setHoveredMenu(i)}
+                onMouseLeave={() => setHoveredMenu(null)}
+                style={{
+                  flex: 1,
+                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                  borderRight: i < 3 ? '1px solid rgba(200,169,110,0.08)' : 'none',
+                  cursor: 'pointer',
+                  background: isHovered ? 'rgba(200,169,110,0.035)' : 'transparent',
+                  transition: 'background 0.4s ease',
+                  overflow: 'hidden',
+                }}
+              >
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                  background: '#c8a96e',
+                  opacity: isHovered ? 1 : 0,
+                  transition: 'opacity 0.35s',
+                }} />
+                <span style={{
+                  position: 'absolute', top: 20, left: 20,
+                  fontFamily: 'sans-serif', fontSize: 10, letterSpacing: '0.22em',
+                  color: isHovered ? '#c8a96e' : 'rgba(255,255,255,0.15)',
+                  transition: 'color 0.35s',
+                }}>{item.num}</span>
+                <div style={{
+                  flex: '0 0 58%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: '100%', paddingTop: 36,
+                }}>
+                  <div style={{
+                    transform: `translateY(${isHovered ? '-18px' : '0px'})`,
+                    transition: 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    width: '72%', maxWidth: 210,
+                  }}>
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      style={{
+                        width: '100%', height: 'auto', objectFit: 'contain', display: 'block',
+                        filter: `brightness(${isHovered ? 1 : 0.55}) saturate(${isHovered ? 1 : 0.7})`,
+                        transition: 'filter 0.45s ease',
+                      }}
+                    />
+                  </div>
+                </div>
+                <div style={{
+                  flex: '0 0 42%',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  justifyContent: 'center', padding: '0 16px',
+                  textAlign: 'center', gap: 8,
+                }}>
+                  <p style={{
+                    fontFamily: 'sans-serif', fontSize: 9, letterSpacing: '0.28em',
+                    color: '#c8a96e', margin: 0,
+                    opacity: isHovered ? 1 : 0,
+                    transform: `translateY(${isHovered ? 0 : 8}px)`,
+                    transition: 'opacity 0.3s, transform 0.3s',
+                  }}>{item.en}</p>
+                  <h3 style={{
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: 'clamp(15px, 1.6vw, 22px)',
+                    fontWeight: 300,
+                    color: isHovered ? '#fff' : 'rgba(255,255,255,0.55)',
+                    letterSpacing: '0.06em', margin: 0,
+                    transition: 'color 0.3s',
+                  }}>{item.name}</h3>
+                  <p style={{
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: 11, color: 'rgba(255,255,255,0.32)',
+                    margin: 0, lineHeight: 1.65,
+                    opacity: isHovered ? 1 : 0,
+                    transition: 'opacity 0.3s 0.05s',
+                  }}>{item.desc}</p>
+                  <p style={{
+                    fontFamily: 'sans-serif', fontSize: 12, letterSpacing: '0.08em',
+                    color: isHovered ? '#c8a96e' : 'rgba(255,255,255,0.2)',
+                    margin: 0, transition: 'color 0.3s',
+                  }}>₩ {item.price}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -219,7 +334,7 @@ export default function StartPage() {
           fontWeight: 800,
           color: 'rgba(255,255,255,0.022)',
           userSelect: 'none', lineHeight: 1,
-        }}>04</span>
+        }}>03</span>
 
         {/* 2단 레이아웃 */}
         <div style={{
@@ -339,25 +454,33 @@ export default function StartPage() {
         position: 'fixed', top: 0, right: 28,
         height: 64,
         display: 'flex', flexDirection: 'row', alignItems: 'center',
-        gap: 20, zIndex: 600,
+        gap: 24, zIndex: 600,
       }}>
-        {SOCIAL_LINKS.map(({ label, href }) => (
+        {SOCIAL_LINKS.map(({ ko, en, href }) => (
           <a
-            key={label}
+            key={en}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              fontFamily: "'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif",
-              fontSize: 13, fontWeight: 600, letterSpacing: '0.06em',
-              color: 'rgba(255,255,255,0.55)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
               textDecoration: 'none',
+              color: 'rgba(255,255,255,0.55)',
               transition: 'color 0.2s',
+              cursor: 'pointer',
             }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#fff'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.55)'}
           >
-            {label}
+            <span style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
+              fontSize: 16, fontWeight: 600, letterSpacing: '0.04em', lineHeight: 1,
+            }}>{ko}</span>
+            <span style={{
+              fontFamily: 'sans-serif',
+              fontSize: 10, fontWeight: 400, letterSpacing: '0.2em', lineHeight: 1,
+              opacity: 0.65,
+            }}>{en}</span>
           </a>
         ))}
       </div>

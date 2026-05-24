@@ -7,23 +7,23 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://okdj21.com';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: '옥된장 양재점',
-    template: '%s | 옥된장 양재점',
+    default: '옥된장양재점 | 양재역점심 양재역회식 양재역맛집',
+    template: '%s | 옥된장양재점',
   },
-  description: '10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로. 된장찌개, 청국장, 순두부찌개, 전골, 미나리전 전문점.',
-  keywords: ['옥된장', '된장찌개', '청국장', '한식당', '전통 된장', '순두부찌개', '미나리전', '한국 음식', '된장'],
+  description: '양재역 1번출구 도보 7분. 10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로. 양재역 점심·회식 추천 된장찌개·청국장·순두부찌개·전골·미나리전 전문점.',
+  keywords: ['옥된장', '옥된장양재점', '된장찌개', '청국장', '한식당', '전통 된장', '순두부찌개', '미나리전', '한국 음식', '된장', '양재역맛집', '양재역점심', '양재역회식', '양재동맛집', '양재역한식', '서초구맛집', '서초동맛집', '양재역된장찌개', '양재역한정식', '양재역근처맛집'],
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
     url: SITE_URL,
-    siteName: '옥된장',
-    title: '옥된장 양재점',
-    description: '10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로.',
+    siteName: '옥된장양재점',
+    title: '옥된장양재점 | 양재역점심 양재역회식 양재역맛집',
+    description: '양재역 1번출구 도보 7분. 10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '옥된장 양재점',
-    description: '10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로.',
+    title: '옥된장양재점 | 양재역점심 양재역회식 양재역맛집',
+    description: '양재역 1번출구 도보 7분. 10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로.',
   },
   robots: {
     index: true,
@@ -44,22 +44,29 @@ const restaurantSchema = {
   '@context': 'https://schema.org',
   '@type': 'Restaurant',
   '@id': `${SITE_URL}/#restaurant`,
-  name: '옥된장',
-  description: '10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로. 된장찌개, 청국장, 순두부찌개, 전골, 미나리전 전문점.',
+  name: '옥된장양재점',
+  alternateName: ['옥된장 양재점', '양재역 된장찌개', '양재역 한식당', '양재동 된장집'],
+  description: '양재역 1번출구 도보 7분. 10년 묵은 항아리 된장으로 끓인 깊은 맛. 국내산 재료로 정직하게, 매일 같은 맛으로. 양재역 점심·회식 추천 된장찌개·청국장·순두부찌개·전골·미나리전 전문점.',
   url: SITE_URL,
   image: `${SITE_URL}/옥된장메인.svg`,
-  servesCuisine: ['한식', 'Korean', '된장찌개', '청국장'],
+  servesCuisine: ['한식', 'Korean', '된장찌개', '청국장', '순두부찌개'],
   priceRange: '₩₩',
   currenciesAccepted: 'KRW',
   paymentAccepted: '현금, 신용카드',
-  // NOTE: 아래 주소/전화번호를 실제 정보로 업데이트하세요
-  // address: {
-  //   '@type': 'PostalAddress',
-  //   streetAddress: '실제 주소',
-  //   addressLocality: '서울특별시',
-  //   addressCountry: 'KR',
-  // },
-  // telephone: '+82-0-0000-0000',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '서운로6길 29, 1층',
+    addressLocality: '서초구',
+    addressRegion: '서울특별시',
+    postalCode: '06750',
+    addressCountry: 'KR',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 37.4848,
+    longitude: 127.0337,
+  },
+  hasMap: 'https://kko.to/양재역옥된장',
   openingHoursSpecification: [
     {
       '@type': 'OpeningHoursSpecification',
@@ -83,8 +90,8 @@ const websiteSchema = {
   '@type': 'WebSite',
   '@id': `${SITE_URL}/#website`,
   url: SITE_URL,
-  name: '옥된장',
-  description: '정직한 한국 전통 된장 맛집',
+  name: '옥된장양재점',
+  description: '양재역 1번출구 도보 7분. 양재역 점심·회식 맛집, 정직한 한국 전통 된장 요리 전문점.',
   inLanguage: 'ko-KR',
   potentialAction: {
     '@type': 'SearchAction',
@@ -145,7 +152,31 @@ const faqSchema = {
       name: '옥된장은 어떤 음식을 전문으로 하나요?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: '옥된장은 전통 한식 된장 요리 전문점으로, 된장찌개, 청국장, 순두부찌개, 전골, 미나리전 등을 제공합니다. 20년 이상 직접 숙성시킨 항아리 된장을 사용하는 것이 특징입니다.',
+        text: '옥된장양재점은 전통 한식 된장 요리 전문점으로, 된장찌개, 청국장, 순두부찌개, 전골, 미나리전 등을 제공합니다. 20년 이상 직접 숙성시킨 항아리 된장을 사용하는 것이 특징입니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '옥된장양재점 위치는 어디인가요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '서울특별시 서초구 서운로6길 29, 1층에 위치합니다. 지하철 3호선 양재역 1번출구에서 도보 약 7분 거리입니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '양재역 근처 점심 맛집을 추천해 주세요.',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '양재역 1번출구에서 도보 7분 거리의 옥된장양재점을 추천드립니다. 9,000원대 된장찌개·청국장 등 합리적인 가격에 국내산 재료로 만든 건강한 한식을 즐길 수 있어 양재역 직장인 점심 맛집으로 인기입니다.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '양재역 회식 장소로 좋은 한식당이 있나요?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '옥된장양재점은 양재역 인근 회식 장소로 적합합니다. 전골(2인 15,000원~20,000원)과 미나리전 등 단체 메뉴가 있으며, 온라인 예약으로 좌석을 미리 확보하실 수 있습니다.',
       },
     },
   ],
