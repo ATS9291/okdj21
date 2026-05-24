@@ -1,7 +1,6 @@
 'use client';
 
 import HoverColorReveal, { ClickZone } from '@/components/HoverColorReveal';
-import { ErrorTrigger } from '@/components/ErrorTrigger';
 
 // ── 클릭 존 설정 ────────────────────────────────────────────────────────────
 // x, y, w, h 모두 화면 기준 % 값
@@ -26,8 +25,6 @@ export default function Home() {
         softness={0.5}
         zones={ZONES}
       />
-
-      <ErrorTrigger />
 
       {/* 소셜 미디어 링크 */}
       <div style={{
