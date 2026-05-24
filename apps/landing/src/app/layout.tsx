@@ -174,7 +174,10 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         {children}
-        <PostHogInit />
+        <PostHogInit
+          apiKey={process.env.NEXT_PUBLIC_POSTHOG_KEY ?? ''}
+          apiHost={process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com'}
+        />
       </body>
     </html>
   );

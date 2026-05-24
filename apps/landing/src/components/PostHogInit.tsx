@@ -3,19 +3,20 @@
 import posthog from 'posthog-js';
 import { useEffect } from 'react';
 
-export default function PostHogInit() {
+interface Props {
+  apiKey: string;
+  apiHost: string;
+}
+
+export default function PostHogInit({ apiKey, apiHost }: Props) {
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-    const host = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
-
-    if (!key || posthog.__loaded) return;
-
-    posthog.init(key, {
-      api_host: host,
+    if (!apiKey || posthog.__loaded) return;
+    posthog.init(apiKey, {
+      api_host: apiHost,
       person_profiles: 'always',
       autocapture: true,
     });
-  }, []);
+  }, [apiKey, apiHost]);
 
   return null;
 }
