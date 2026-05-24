@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import gsap from 'gsap';
+import { useState } from 'react';
 import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
 
@@ -10,75 +9,56 @@ type Category = { id: string; label: string; items: MenuItem[] };
 
 const CATEGORIES: Category[] = [
   {
-    id: 'doenjang',
-    label: '된장',
+    id: 'doenjang-jeongol',
+    label: '된장전골',
     items: [
-      { name: '옥된장찌개', desc: '10년 묵은 항아리 된장으로 끓인 깊은 맛의 찌개. 두부와 호박이 어우러집니다.', price: '9,000원' },
-      { name: '청국장찌개', desc: '직접 띄운 청국장으로 끓인 구수하고 진한 찌개입니다.', price: '9,000원' },
-      { name: '된장 비빔밥', desc: '제철 나물과 묵은 된장 소스를 곁들인 정갈한 비빔밥.', price: '10,000원' },
-      { name: '된장 쌈밥 정식', desc: '직접 담근 된장과 쌈채소, 밑반찬이 함께 나오는 정식.', price: '13,000원' },
+      { name: '된장 버섯전골', desc: '국내산 버섯과 항아리 된장으로 끓인 깊고 구수한 전골', price: '22,000원 (2인)' },
+      { name: '된장 두부전골', desc: '국산 두부를 넉넉히 넣어 담백하게 끓인 된장 전골', price: '20,000원 (2인)' },
+      { name: '된장 해물전골', desc: '싱싱한 해물과 된장이 어우러지는 시원하고 깊은 전골', price: '26,000원 (2인)' },
+      { name: '된장 쇠고기전골', desc: '국내산 쇠고기와 묵은 된장의 진한 풍미가 가득한 전골', price: '28,000원 (2인)' },
     ],
   },
   {
-    id: 'soondubu',
-    label: '순두부',
+    id: 'soondubu-jeongol',
+    label: '순두부전골',
     items: [
-      { name: '해물 순두부찌개', desc: '싱싱한 해물과 부드러운 순두부가 만나는 얼큰하고 시원한 찌개.', price: '10,000원' },
-      { name: '버섯 순두부찌개', desc: '다양한 버섯을 넣어 깊은 풍미를 낸 순두부찌개.', price: '9,500원' },
-      { name: '순두부 덮밥', desc: '부드러운 순두부와 양념장을 밥 위에 올린 간편한 한 그릇 요리.', price: '9,000원' },
+      { name: '해물 순두부전골', desc: '싱싱한 해물과 부드러운 순두부가 어우러진 얼큰한 전골', price: '24,000원 (2인)' },
+      { name: '버섯 순두부전골', desc: '다양한 버섯과 순두부를 넣어 끓인 담백하고 깊은 전골', price: '22,000원 (2인)' },
+      { name: '김치 순두부전골', desc: '잘 익은 김치와 부드러운 순두부가 어우러진 얼큰한 전골', price: '22,000원 (2인)' },
+      { name: '낙지 순두부전골', desc: '통통한 낙지와 순두부를 넣어 끓인 해물 순두부 전골', price: '26,000원 (2인)' },
     ],
   },
   {
-    id: 'jeongol',
-    label: '전골',
+    id: 'sukyuk-jeongol',
+    label: '수육전골',
     items: [
-      { name: '버섯 전골', desc: '표고·느타리·팽이버섯을 가득 넣어 끓인 깔끔한 전골.', price: '16,000원 (2인)' },
-      { name: '두부 전골', desc: '국내산 두부와 각종 채소를 넣어 끓이는 담백한 전골.', price: '15,000원 (2인)' },
-      { name: '된장 해물 전골', desc: '묵은 된장 육수에 해물과 두부를 풍성하게 담은 전골.', price: '20,000원 (2인)' },
+      { name: '차돌박이 된장전골', desc: '차돌박이와 묵은 된장으로 끓인 풍부하고 진한 전골', price: '30,000원 (2인)' },
+      { name: '삼겹 수육전골', desc: '부드럽게 삶은 삼겹수육과 된장 육수의 조화로운 전골', price: '26,000원 (2인)' },
+      { name: '돼지 수육전골', desc: '담백하게 삶은 돼지수육과 구수한 된장 육수의 전골', price: '24,000원 (2인)' },
+      { name: '수육 모둠전골', desc: '다양한 수육을 한 자리에서 즐기는 푸짐한 모둠 전골', price: '32,000원 (2인)' },
     ],
   },
   {
-    id: 'minarijeon',
-    label: '미나리전',
+    id: 'byeolmi-charim',
+    label: '별미차림',
     items: [
-      { name: '미나리전', desc: '향긋한 미나리를 듬뿍 넣어 노릇하게 구운 계절 전. 막걸리와 찰떡 궁합.', price: '11,000원' },
-      { name: '미나리 해물파전', desc: '미나리와 신선한 해물이 어우러진 바삭한 파전.', price: '13,000원' },
-      { name: '미나리 도토리묵무침', desc: '탱글한 도토리묵과 미나리를 새콤달콤하게 무친 반찬.', price: '8,000원' },
-      { name: '미나리 나물', desc: '데친 미나리를 들기름에 무친 담백하고 향긋한 나물.', price: '5,000원' },
+      { name: '옥된장 정식', desc: '된장찌개, 순두부, 구이, 밑반찬이 함께하는 푸짐한 정식', price: '15,000원' },
+      { name: '쌈밥 정식', desc: '직접 담근 된장과 쌈채소, 6가지 밑반찬이 함께하는 정식', price: '13,000원' },
+      { name: '미나리전 상차림', desc: '향긋한 미나리전과 된장찌개, 밥, 밑반찬 한 상차림', price: '14,000원' },
+      { name: '청국장 정식', desc: '직접 띄운 청국장찌개와 구이, 밑반찬이 함께하는 정식', price: '11,000원' },
     ],
   },
 ];
 
 export default function MenuPage() {
   const [active, setActive] = useState(0);
-  const listRef = useRef<HTMLDivElement>(null);
-
-  const switchTab = (idx: number) => {
-    if (idx === active) return;
-    const el = listRef.current;
-    if (!el) { setActive(idx); return; }
-    gsap.to(el, {
-      opacity: 0, y: 16, duration: 0.18, ease: 'power2.in',
-      onComplete: () => {
-        setActive(idx);
-        gsap.fromTo(el, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out' });
-      },
-    });
-  };
-
-  useEffect(() => {
-    if (listRef.current) {
-      gsap.fromTo(listRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' });
-    }
-  }, []);
-
   const cat = CATEGORIES[active];
 
   return (
     <main style={{ background: '#0a0a0a', minHeight: '100vh', cursor: NORIGAE_CURSOR }}>
       <SiteNav />
 
-      <div style={{ maxWidth: 860, margin: '0 auto', padding: '120px 32px 100px' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '120px 32px 100px' }}>
         {/* 헤더 */}
         <p style={{ fontFamily: 'sans-serif', fontSize: 11, letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 12 }}>
           MENU
@@ -90,12 +70,12 @@ export default function MenuPage() {
           대표 메뉴
         </h1>
 
-        {/* 탭 */}
-        <div style={{ display: 'flex', gap: 0, marginBottom: 56, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        {/* 카테고리 탭 */}
+        <div style={{ display: 'flex', gap: 0, marginBottom: 48, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
           {CATEGORIES.map((c, i) => (
             <button
               key={c.id}
-              onClick={() => switchTab(i)}
+              onClick={() => setActive(i)}
               style={{
                 padding: '14px 28px',
                 fontFamily: "'Noto Sans KR', sans-serif",
@@ -113,34 +93,51 @@ export default function MenuPage() {
           ))}
         </div>
 
-        {/* 메뉴 목록 */}
-        <div ref={listRef} style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        {/* 메뉴 카드 그리드 2×2 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 20,
+        }}>
           {cat.items.map((item) => (
-            <div key={item.name} style={{
-              display: 'grid', gridTemplateColumns: '1fr auto',
-              alignItems: 'start', gap: 24,
-              padding: '28px 0',
-              borderBottom: '1px solid rgba(255,255,255,0.07)',
-            }}>
-              <div>
-                <h3 style={{
-                  fontFamily: "'Noto Sans KR', sans-serif",
-                  fontSize: 18, fontWeight: 500, color: '#fff', marginBottom: 8,
-                }}>
-                  {item.name}
-                </h3>
-                <p style={{
-                  fontFamily: "'Noto Sans KR', sans-serif",
-                  fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.8,
-                }}>
-                  {item.desc}
-                </p>
-              </div>
+            <div
+              key={item.name}
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(200,169,110,0.15)',
+                borderRadius: 8,
+                padding: '28px 26px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 12,
+                transition: 'border-color 0.2s, background 0.2s',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(200,169,110,0.4)';
+                (e.currentTarget as HTMLDivElement).style.background = 'rgba(200,169,110,0.04)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(200,169,110,0.15)';
+                (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.03)';
+              }}
+            >
+              <h3 style={{
+                fontFamily: "'Noto Sans KR', sans-serif",
+                fontSize: 18, fontWeight: 600, color: '#fff', margin: 0,
+              }}>
+                {item.name}
+              </h3>
+              <p style={{
+                fontFamily: "'Noto Sans KR', sans-serif",
+                fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.8,
+                flex: 1, margin: 0,
+              }}>
+                {item.desc}
+              </p>
               {item.price && (
                 <span style={{
                   fontFamily: "'Noto Sans KR', sans-serif",
-                  fontSize: 14, color: '#c8a96e', whiteSpace: 'nowrap',
-                  paddingTop: 4,
+                  fontSize: 15, fontWeight: 600, color: '#c8a96e',
                 }}>
                   {item.price}
                 </span>

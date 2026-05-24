@@ -7,7 +7,7 @@ import HoverColorReveal, { ClickZone } from '@/components/HoverColorReveal';
 // 이미지 레이아웃에 맞게 숫자를 조정하세요
 // 옥된장 파사드 영역에 맞게 x, y, w, h (화면 % 기준) 조정
 const ZONES: ClickZone[] = [
-  { id: 'gallery', label: '', href: '/gallery', x: 20, y: 35, w: 36, h: 47 },
+  { id: 'start', label: '', href: '/start', x: 20, y: 35, w: 36, h: 47 },
 ];
 
 const SOCIAL_LINKS = [

@@ -37,7 +37,7 @@ export default function SiteNav() {
       borderBottom: scrolled ? '1px solid rgba(200,169,110,0.15)' : 'none',
       transition: 'background 0.3s, backdrop-filter 0.3s, border-bottom 0.3s',
     }}>
-      <Link href="/gallery" style={{
+      <Link href="/start" style={{
         fontFamily: "'Noto Sans KR', sans-serif",
         fontSize: 18,
         fontWeight: 700,
