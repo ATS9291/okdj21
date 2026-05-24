@@ -1,9 +1,6 @@
 import { Resend } from 'resend';
 import { NextRequest, NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const NOTIFY_EMAIL = process.env.ERROR_NOTIFY_EMAIL ?? 'qhfud0306@gmail.com';
-
 function esc(value: unknown): string {
   return String(value ?? '알 수 없음')
     .replace(/&/g, '&amp;')
@@ -14,6 +11,9 @@ function esc(value: unknown): string {
 }
 
 export async function POST(req: NextRequest) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const NOTIFY_EMAIL = process.env.ERROR_NOTIFY_EMAIL ?? 'qhfud0306@gmail.com';
+
   let body: Record<string, unknown>;
   try {
     body = await req.json();
