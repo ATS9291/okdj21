@@ -8,10 +8,10 @@ import { NORIGAE_CURSOR } from '@/lib/cursor';
 import { SOCIAL_LINKS } from '@/lib/constants';
 
 const MENU_ITEMS = [
-  { num: '01', name: '된장전골',  en: 'DOENJANG JJEONGOL',  desc: '20년 숙성 항아리 된장 베이스', price: '13,000', img: '/menu-된장전골.jpg',  href: '/menu#doenjang' },
-  { num: '02', name: '순두부전골', en: 'SUNDUBU JJEONGOL',   desc: '부드러운 순두부와 해물의 조화', price: '14,000', img: '/menu-순두부전골.jpg', href: '/menu#sundubu' },
-  { num: '03', name: '수육전골',  en: 'SUYUK JJEONGOL',     desc: '국내산 수육과 된장의 깊은 맛', price: '55,000', img: '/menu-수육전골.jpg',  href: '/menu#sukyuk' },
-  { num: '04', name: '별미차림',  en: 'BYEOLMI CHARIM',     desc: '계절 재료로 차린 별미 한상', price: '20,000', img: '/menu-별미차림.jpg',  href: '/menu#byeolmi' },
+  { num: '01', name: '된장전골',  en: 'DOENJANG JJEONGOL',  desc: '20년 숙성 항아리 된장 베이스', price: '13,000', img: '/menu-된장전골.jpg',  imgPos: 'center 50%', href: '/menu/doenjang' },
+  { num: '02', name: '순두부전골', en: 'SUNDUBU JJEONGOL',   desc: '부드러운 순두부와 해물의 조화', price: '14,000', img: '/menu-순두부전골.png', imgPos: 'center 50%', href: '/menu/sundubu' },
+  { num: '03', name: '수육전골',  en: 'SUYUK JJEONGOL',     desc: '국내산 수육과 된장의 깊은 맛', price: '55,000', img: '/menu-수육전골.png',  imgPos: 'center 50%', href: '/menu/sukyuk' },
+  { num: '04', name: '별미차림',  en: 'BYEOLMI CHARIM',     desc: '계절 재료로 차린 별미 한상', price: '20,000', img: '/menu-별미차림.jpg',  imgPos: 'center 50%', href: '/menu/byeolmi' },
 ];
 
 const SECTIONS = [
@@ -26,6 +26,22 @@ export default function StartPage() {
   const [showWidget, setShowWidget] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<number | null>(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [glare, setGlare] = useState({ x: 50, y: 50 });
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    setTilt({ x: (0.5 - py) * 18, y: (px - 0.5) * 24 });
+    setGlare({ x: px * 100, y: py * 100 });
+  };
+
+  const handleCardLeave = () => {
+    setHoveredMenu(null);
+    setTilt({ x: 0, y: 0 });
+    setGlare({ x: 50, y: 50 });
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -107,92 +123,132 @@ export default function StartPage() {
         <div style={{ flex: 1, display: 'flex', marginTop: 28 }}>
           {MENU_ITEMS.map((item, i) => {
             const isHovered = hoveredMenu === i;
+            const tx = isHovered ? tilt.x : 0;
+            const ty = isHovered ? tilt.y : 0;
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 onMouseEnter={() => setHoveredMenu(i)}
-                onMouseLeave={() => setHoveredMenu(null)}
+                onMouseLeave={handleCardLeave}
+                onMouseMove={handleCardMouseMove}
                 style={{
-                  flex: 1,
+                  flex: isHovered ? '1.55' : (hoveredMenu !== null ? '0.82' : '1'),
                   position: 'relative',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
                   textDecoration: 'none',
                   borderRight: i < 3 ? '1px solid rgba(200,169,110,0.08)' : 'none',
                   cursor: 'pointer',
-                  background: isHovered ? 'rgba(200,169,110,0.035)' : 'transparent',
-                  transition: 'background 0.4s ease',
-                  overflow: 'hidden',
+                  perspective: '1000px',
+                  overflow: 'visible',
+                  transition: 'flex 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 }}
               >
+                {/* 3D 회전 카드 */}
                 <div style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-                  background: '#c8a96e',
-                  opacity: isHovered ? 1 : 0,
-                  transition: 'opacity 0.35s',
-                }} />
-                <span style={{
-                  position: 'absolute', top: 20, left: 20,
-                  fontFamily: 'sans-serif', fontSize: 10, letterSpacing: '0.22em',
-                  color: isHovered ? '#c8a96e' : 'rgba(255,255,255,0.15)',
-                  transition: 'color 0.35s',
-                }}>{item.num}</span>
-                <div style={{
-                  flex: '0 0 58%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  width: '100%', paddingTop: 36,
+                  width: '100%', height: '100%',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: '#0a0a0a',
+                  transform: `rotateX(${tx}deg) rotateY(${ty}deg)`,
+                  transformStyle: 'preserve-3d',
+                  transition: isHovered
+                    ? 'transform 0.08s linear'
+                    : 'transform 0.65s cubic-bezier(0.23, 1, 0.32, 1)',
+                  willChange: 'transform',
                 }}>
+                  {/* 배경 이미지 — 카드 꽉 채움, 냄비 높이 70%로 정규화 */}
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    style={{
+                      position: 'absolute', inset: 0,
+                      width: '100%', height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: item.imgPos,
+                      filter: `brightness(${isHovered ? 0.78 : 0.5}) saturate(${isHovered ? 1.15 : 0.85})`,
+                      transition: 'filter 0.5s ease',
+                    }}
+                  />
+
+                  {/* 상단 비네트 — 틈 마스킹 + 어두운 럭셔리 분위기 */}
                   <div style={{
-                    transform: `translateY(${isHovered ? '-18px' : '0px'})`,
-                    transition: 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                    width: '72%', maxWidth: 210,
+                    position: 'absolute', top: 0, left: 0, right: 0, height: '18%',
+                    background: 'linear-gradient(to bottom, rgba(10,10,10,0.75) 0%, transparent 100%)',
+                    pointerEvents: 'none',
+                  }} />
+
+                  {/* 하단 그라데이션 — 텍스트 가독성 */}
+                  <div style={{
+                    position: 'absolute', bottom: 0, left: 0, right: 0, height: '45%',
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%)',
+                    pointerEvents: 'none',
+                  }} />
+
+                  {/* 상단 골드 라인 */}
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                    background: 'linear-gradient(90deg, transparent, #c8a96e, transparent)',
+                    opacity: isHovered ? 1 : 0,
+                    transition: 'opacity 0.35s',
+                    transform: 'translateZ(2px)',
+                  }} />
+
+                  {/* 번호 */}
+                  <span style={{
+                    position: 'absolute', top: 20, left: 20,
+                    fontFamily: 'sans-serif', fontSize: 10, letterSpacing: '0.22em',
+                    color: isHovered ? '#c8a96e' : 'rgba(255,255,255,0.3)',
+                    transition: 'color 0.35s',
+                    transform: 'translateZ(20px)',
+                  }}>{item.num}</span>
+
+                  {/* 텍스트 오버레이 */}
+                  <div style={{
+                    position: 'absolute', bottom: 0, left: 0, right: 0,
+                    padding: '0 24px 32px',
+                    display: 'flex', flexDirection: 'column', gap: 7,
+                    transform: 'translateZ(30px)',
                   }}>
-                    <img
-                      src={item.img}
-                      alt={item.name}
-                      style={{
-                        width: '100%', height: 'auto', objectFit: 'contain', display: 'block',
-                        filter: `brightness(${isHovered ? 1 : 0.55}) saturate(${isHovered ? 1 : 0.7})`,
-                        transition: 'filter 0.45s ease',
-                      }}
-                    />
+                    <p style={{
+                      fontFamily: 'sans-serif', fontSize: 9, letterSpacing: '0.28em',
+                      color: '#c8a96e', margin: 0,
+                      opacity: isHovered ? 1 : 0,
+                      transform: `translateY(${isHovered ? 0 : 6}px)`,
+                      transition: 'opacity 0.3s, transform 0.3s',
+                    }}>{item.en}</p>
+                    <h3 style={{
+                      fontFamily: "'Noto Sans KR', sans-serif",
+                      fontSize: 'clamp(19px, 2vw, 28px)',
+                      fontWeight: 500,
+                      color: '#fff',
+                      letterSpacing: '0.05em', margin: 0,
+                    }}>{item.name}</h3>
+                    <p style={{
+                      fontFamily: "'Noto Sans KR', sans-serif",
+                      fontSize: 12, color: 'rgba(255,255,255,0.6)',
+                      margin: 0, lineHeight: 1.65,
+                      opacity: isHovered ? 1 : 0,
+                      transform: `translateY(${isHovered ? 0 : 6}px)`,
+                      transition: 'opacity 0.3s 0.05s, transform 0.3s 0.05s',
+                    }}>{item.desc}</p>
+                    <p style={{
+                      fontFamily: 'sans-serif', fontSize: 15, letterSpacing: '0.06em',
+                      color: '#c8a96e', fontWeight: 500,
+                      margin: 0,
+                    }}>₩ {item.price}</p>
                   </div>
-                </div>
-                <div style={{
-                  flex: '0 0 42%',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center',
-                  justifyContent: 'center', padding: '0 16px',
-                  textAlign: 'center', gap: 8,
-                }}>
-                  <p style={{
-                    fontFamily: 'sans-serif', fontSize: 9, letterSpacing: '0.28em',
-                    color: '#c8a96e', margin: 0,
+
+                  {/* 글레어 */}
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: isHovered
+                      ? `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,230,160,0.11) 0%, rgba(255,255,255,0.03) 45%, transparent 70%)`
+                      : 'none',
                     opacity: isHovered ? 1 : 0,
-                    transform: `translateY(${isHovered ? 0 : 8}px)`,
-                    transition: 'opacity 0.3s, transform 0.3s',
-                  }}>{item.en}</p>
-                  <h3 style={{
-                    fontFamily: "'Noto Sans KR', sans-serif",
-                    fontSize: 'clamp(15px, 1.6vw, 22px)',
-                    fontWeight: 300,
-                    color: isHovered ? '#fff' : 'rgba(255,255,255,0.55)',
-                    letterSpacing: '0.06em', margin: 0,
-                    transition: 'color 0.3s',
-                  }}>{item.name}</h3>
-                  <p style={{
-                    fontFamily: "'Noto Sans KR', sans-serif",
-                    fontSize: 11, color: 'rgba(255,255,255,0.32)',
-                    margin: 0, lineHeight: 1.65,
-                    opacity: isHovered ? 1 : 0,
-                    transition: 'opacity 0.3s 0.05s',
-                  }}>{item.desc}</p>
-                  <p style={{
-                    fontFamily: 'sans-serif', fontSize: 12, letterSpacing: '0.08em',
-                    color: isHovered ? '#c8a96e' : 'rgba(255,255,255,0.2)',
-                    margin: 0, transition: 'color 0.3s',
-                  }}>₩ {item.price}</p>
+                    transition: 'opacity 0.3s',
+                    pointerEvents: 'none',
+                    transform: 'translateZ(1px)',
+                  }} />
                 </div>
               </Link>
             );
@@ -270,42 +326,39 @@ export default function StartPage() {
                 border: '1px dashed rgba(200,169,110,0.18)',
                 borderRadius: 4,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: href === '/menu' ? 0 : 44,
+                marginBottom: 44,
                 color: 'rgba(255,255,255,0.15)',
                 fontSize: 11, fontFamily: 'sans-serif', letterSpacing: '0.15em',
               }}>
                 CONTENT AREA
               </div>
 
-              {/* 자세히 보기 — 메뉴 섹션 제외 */}
-              {href !== '/menu' && (
-                <a
-                  href={href}
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 10,
-                    fontFamily: "'Noto Sans KR', sans-serif",
-                    fontSize: 13, fontWeight: 600, letterSpacing: '0.1em',
-                    color: '#c8a96e', textDecoration: 'none',
-                    borderBottom: '1px solid rgba(200,169,110,0.35)',
-                    paddingBottom: 4,
-                    marginTop: 44,
-                    transition: 'color 0.2s, border-color 0.2s',
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.color = '#e8c98e';
-                    (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = '#e8c98e';
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e';
-                    (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = 'rgba(200,169,110,0.35)';
-                  }}
-                >
-                  자세히 보기
-                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                    <path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </a>
-              )}
+              <a
+                href={href}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                  fontFamily: "'Noto Sans KR', sans-serif",
+                  fontSize: 13, fontWeight: 600, letterSpacing: '0.1em',
+                  color: '#c8a96e', textDecoration: 'none',
+                  borderBottom: '1px solid rgba(200,169,110,0.35)',
+                  paddingBottom: 4,
+                  marginTop: 44,
+                  transition: 'color 0.2s, border-color 0.2s',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = '#e8c98e';
+                  (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = '#e8c98e';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e';
+                  (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = 'rgba(200,169,110,0.35)';
+                }}
+              >
+                자세히 보기
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                  <path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
             </div>
           </section>
         );
