@@ -5,6 +5,8 @@ export type Category = {
   label: string;
   en: string;
   image: string;
+  imagePosition?: string;
+  imageScale?: number;
   tagline: string;
   items: MenuItem[];
 };
@@ -14,7 +16,8 @@ export const CATEGORIES: Category[] = [
     id: 'doenjang',
     label: '된장전골',
     en: 'DOENJANG JJEONGOL',
-    image: '/menu-된장전골.jpg',
+    image: '/menu-된장전골-detail.jpg',
+    imagePosition: '30% 70%',
     tagline: '20년 숙성 항아리 된장 베이스',
     items: [
       { name: '된장 버섯전골', desc: '국내산 버섯과 항아리 된장으로 끓인 깊고 구수한 전골', price: '22,000원 (2인)' },
@@ -27,7 +30,8 @@ export const CATEGORIES: Category[] = [
     id: 'sundubu',
     label: '순두부전골',
     en: 'SUNDUBU JJEONGOL',
-    image: '/menu-순두부전골.png',
+    image: '/menu-순두부전골-detail.jpg',
+    imageScale: 1.20,
     tagline: '부드러운 순두부와 해물의 조화',
     items: [
       { name: '해물 순두부전골', desc: '싱싱한 해물과 부드러운 순두부가 어우러진 얼큰한 전골', price: '24,000원 (2인)' },
@@ -40,7 +44,8 @@ export const CATEGORIES: Category[] = [
     id: 'sukyuk',
     label: '수육전골',
     en: 'SUYUK JJEONGOL',
-    image: '/menu-수육전골.png',
+    image: '/menu-수육전골-detail.jpg',
+    imagePosition: 'center 42%',
     tagline: '국내산 수육과 된장의 깊은 맛',
     items: [
       { name: '차돌박이 된장전골', desc: '차돌박이와 묵은 된장으로 끓인 풍부하고 진한 전골', price: '30,000원 (2인)' },
@@ -53,7 +58,8 @@ export const CATEGORIES: Category[] = [
     id: 'byeolmi',
     label: '별미차림',
     en: 'BYEOLMI CHARIM',
-    image: '/menu-별미차림.jpg',
+    image: '/menu-별미차림-detail.jpg',
+    imagePosition: 'center 55%',
     tagline: '계절 재료로 차린 별미 한상',
     items: [
       { name: '옥된장 정식', desc: '된장찌개, 순두부, 구이, 밑반찬이 함께하는 푸짐한 정식', price: '15,000원' },

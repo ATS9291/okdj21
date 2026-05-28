@@ -23,7 +23,8 @@ export default function CategoryPage() {
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center 50%',
+            objectFit: 'cover', objectPosition: current.imagePosition ?? 'center 50%',
+            transform: `scale(${current.imageScale ?? 1})`,
             filter: 'brightness(0.42) saturate(0.88)',
           }}
         />

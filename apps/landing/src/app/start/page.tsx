@@ -372,9 +372,9 @@ export default function StartPage() {
                     그런데 두 번, 세 번… 발걸음이 잦아질수록 묘한 매력에 빠져들었고, 본사 대표님을 찾아가 창업의 뜻을 전했으나<br />
                     돌아온 답은 단호한 반대였습니다.<br />
                     <span style={{ color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>"요식업은 아무나 하는 게 아닙니다. 직접 일해 보시고, 충분히 고민해 보세요."</span><br />
-                    고민 끝에 사직서를 내고 인수인계 기간동안 틈틈이 매장을 찾아 맞는길이 아니더라도 일내보자란 마인드로 배웠고,<br /> 퇴직 후엔 직영점 막내로 들어가 밑바닥부터 다시 배웠습니다. 매일 칼날에 손이베이고 설거지에 손이 부르트고 갈라지고, 하나라도 더 배우자는 생각에 14시간를 몰두하며 하루에 하나씩 기교 없이, 있는 그대로 천천히 익혀 나갔습니다.<br />
-                    그렇게 흘린 땀과 열정을 인정받아 2024년, 21호점을 허락받았고 지금의 옥된장 양재점이 탄생하게 되었습니다.<br />
-                    첫 요식업인 만큼 부족함도, 작은 실수도 있겠지만. 사소한 단점을 뒤로하고 옥된장 양재점이라는 이 공간안에서만큼 한 분 한 분이 따뜻한 정(情)을 느끼고 돌아가시길 바라는 마음으로 <br />매일 아침일찍 밥을 짓고, 한 분 한 분 기억하려 노력하고 먼저 인사하며, 같은 자리에서 같은 시간에 기다리고 있겠습니다.
+                    고민 끝에 사직서를 내고 인수인계 기간동안 틈틈이 매장을 찾아 맞는길이 아니더라도 일내보자란 마인드로 배웠고,<br /> 퇴직 후엔 직영점 막내로 들어가 밑바닥부터 다시 배웠습니다.<br /> 매일 칼날에 손이베이고 설거지에 손이 부르트고 갈라지고, <br />하나라도 더 배우자는 생각에 14시간를 몰두하며 하루에 하나씩 기교 없이, 있는 그대로 천천히 익혀 나갔습니다.<br />
+                    그렇게 흘린 땀과 열정을 인정받아 2024년, 21호점을 허락받았고 <br />지금의 옥된장 양재점이 탄생하게 되었습니다.<br />
+                    부족하지만 확고한 운영철학은 옥된장 양재점이라는 공간안에서만큼 한 분 한 분이 따뜻한 정(情)을 느끼게, 해드리자이며 <br />초심을 잃지 않기 위해 매일 아침일찍 밥을 짓고, 한 분 한 분 기억하려 노력하고 먼저 인사하며, 같은 자리에서 같은 시간에 기다리고 있겠습니다.
                   </p>
 
                   {/* 구분선 */}
@@ -522,7 +522,7 @@ export default function StartPage() {
         }}>
           {/* 왼쪽: 텍스트 정보 */}
           <div>
-            <p style={{ fontFamily: 'sans-serif', fontSize: 11, letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 18 }}>
+            <p style={{ fontFamily: 'sans-serif', fontSize: 21, letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 18 }}>
               LOCATION
             </p>
             <h2 style={{
@@ -536,23 +536,33 @@ export default function StartPage() {
 
             {/* 주소 */}
             <div style={{ marginBottom: 32 }}>
-              <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 10, letterSpacing: '0.25em', color: '#c8a96e', marginBottom: 10 }}>주소</p>
-              <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 15, color: '#fff', lineHeight: 1.7 }}>
+              <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 20, letterSpacing: '0.25em', color: '#c8a96e', marginBottom: 10 }}>주소</p>
+              <a
+                href="https://naver.me/GkR3y2cn"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontFamily: "'Noto Sans KR', sans-serif", fontSize: 25, color: '#fff', lineHeight: 1.7,
+                  textDecoration: 'underline', textUnderlineOffset: 4, transition: 'color 0.2s', display: 'inline-block',
+                }}
+                onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e'}
+                onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = '#fff'}
+              >
                 서울특별시 서초구 서운로 6길 29, 1층
-              </p>
+              </a>
             </div>
 
             {/* 운영시간 */}
             <div style={{ marginBottom: 32 }}>
-              <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 10, letterSpacing: '0.25em', color: '#c8a96e', marginBottom: 10 }}>운영시간</p>
+              <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 20, letterSpacing: '0.25em', color: '#c8a96e', marginBottom: 10 }}>운영시간</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {[
                   { day: '매일', time: '11:00 — 22:00' },
                   { day: '쉬는시간', time: '없음' },
                 ].map(({ day, time }) => (
                   <div key={day} style={{ display: 'flex', justifyContent: 'space-between', maxWidth: 300 }}>
-                    <span style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>{day}</span>
-                    <span style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 13, color: '#fff' }}>{time}</span>
+                    <span style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 23, color: 'rgba(255,255,255,0.45)' }}>{day}</span>
+                    <span style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 23, color: '#fff' }}>{time}</span>
                   </div>
                 ))}
               </div>
@@ -560,27 +570,48 @@ export default function StartPage() {
 
             {/* 교통 및 주차 */}
             <div style={{ marginBottom: 40 }}>
-              <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 10, letterSpacing: '0.25em', color: '#c8a96e', marginBottom: 10 }}>교통 및 주차</p>
+              <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 20, letterSpacing: '0.25em', color: '#c8a96e', marginBottom: 10 }}>교통 및 주차</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
+                <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 23, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
                   🚇 지하철 3호선 양재역 1번출구 도보 7분
                 </p>
-                <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
-                  🚗 주차불가 · 유료주차 <span style={{ color: 'rgba(255,255,255,0.75)' }}>양지주차장</span> 도보 5분
+                <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 23, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
+                  🚗 주차불가 · 유료주차{' '}
+                  <a
+                    href="https://naver.me/GyYbPrdY"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'rgba(255,255,255,0.75)', textDecoration: 'underline', textUnderlineOffset: 3, transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e'}
+                    onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.75)'}
+                  >
+                    양지주차장
+                  </a>{' '}
+                  도보 5분
                 </p>
-                <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.3)', lineHeight: 1.6, paddingLeft: 22 }}>
-                  서울 서초구 서초동 1359-8
+                <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 22, color: 'rgba(255,255,255,0.3)', lineHeight: 1.6, paddingLeft: 22 }}>
+                  <span style={{ color: 'rgba(200,169,110,0.6)' }}>양지주차장 주소:</span>{' '}
+                  <a
+                    href="https://naver.me/GyYbPrdY"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'underline', textUnderlineOffset: 3, transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e'}
+                    onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.5)'}
+                  >
+                    서울 서초구 서초동 1359-8
+                  </a>
                 </p>
               </div>
             </div>
 
             {/* 전화 */}
             <a
-              href="tel:070-8657-2499"
+              href="tel:07086572499"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
                 fontFamily: "'Noto Sans KR', sans-serif",
-                fontSize: 13, fontWeight: 600, letterSpacing: '0.1em',
+                fontSize: 23, fontWeight: 600, letterSpacing: '0.1em',
                 color: '#c8a96e', textDecoration: 'none',
                 borderBottom: '1px solid rgba(200,169,110,0.35)',
                 paddingBottom: 4,
