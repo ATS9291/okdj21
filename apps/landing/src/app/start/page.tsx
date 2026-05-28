@@ -2,21 +2,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import gsap from 'gsap';
 import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
 import { SOCIAL_LINKS } from '@/lib/constants';
 
 const MENU_ITEMS = [
-  { num: '01', name: '된장전골',  en: 'DOENJANG JJEONGOL',  desc: '20년 숙성 항아리 된장 베이스', price: '13,000', img: '/menu-된장전골.jpg',  imgPos: 'center 50%', href: '/menu/doenjang' },
-  { num: '02', name: '순두부전골', en: 'SUNDUBU JJEONGOL',   desc: '부드러운 순두부와 해물의 조화', price: '14,000', img: '/menu-순두부전골.png', imgPos: 'center 50%', href: '/menu/sundubu' },
-  { num: '03', name: '수육전골',  en: 'SUYUK JJEONGOL',     desc: '국내산 수육과 된장의 깊은 맛', price: '55,000', img: '/menu-수육전골.png',  imgPos: 'center 50%', href: '/menu/sukyuk' },
-  { num: '04', name: '별미차림',  en: 'BYEOLMI CHARIM',     desc: '계절 재료로 차린 별미 한상', price: '20,000', img: '/menu-별미차림.jpg',  imgPos: 'center 50%', href: '/menu/byeolmi' },
+  { num: '01', name: '된장전골', en: 'DOENJANG JJEONGOL', desc: '20년 숙성 항아리 된장 베이스', price: '13,000', img: '/menu-된장전골.jpg', imgPos: 'center 50%', href: '/menu/doenjang' },
+  { num: '02', name: '순두부전골', en: 'SUNDUBU JJEONGOL', desc: '부드러운 순두부와 해물의 조화', price: '14,000', img: '/menu-순두부전골.png', imgPos: 'center 50%', href: '/menu/sundubu' },
+  { num: '03', name: '수육전골', en: 'SUYUK JJEONGOL', desc: '국내산 수육과 된장의 깊은 맛', price: '55,000', img: '/menu-수육전골.png', imgPos: 'center 50%', href: '/menu/sukyuk' },
+  { num: '04', name: '별미차림', en: 'BYEOLMI CHARIM', desc: '계절 재료로 차린 별미 한상', price: '20,000', img: '/menu-별미차림.jpg', imgPos: 'center 50%', href: '/menu/byeolmi' },
 ];
 
 const SECTIONS = [
-  { label: '소개',   sub: '사장님과 직원 이야기',       href: '/about', tag: 'ABOUT' },
-  { label: '블로그', sub: '장사 노하우 · 재료 이야기',   href: '/blog',  tag: 'BLOG' },
+  { label: '소개', sub: '사장님과 직원 이야기', href: '/about', tag: 'ABOUT' },
+  { label: '블로그', sub: '장사 노하우 · 재료 이야기', href: '/blog', tag: 'BLOG' },
 ];
 
 const YOUTUBE_VIDEO_ID = 'VIDEO_ID_HERE';
@@ -98,7 +99,7 @@ export default function StartPage() {
         }}>
           <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10, letterSpacing: '0.25em', fontFamily: 'sans-serif' }}>SCROLL</span>
           <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
-            <path d="M7 0v16M1 10l6 6 6-6" stroke="rgba(200,169,110,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M7 0v16M1 10l6 6 6-6" stroke="rgba(200,169,110,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </section>
@@ -259,13 +260,16 @@ export default function StartPage() {
       {/* ── 풀스크린 섹션 ────────────────────────────────────── */}
       {SECTIONS.map(({ label, sub, href, tag }, i) => {
         const isEven = i % 2 === 0;
+        const isAbout = tag === 'ABOUT';
         return (
           <section key={href} style={{
-            position: 'relative', width: '100%', height: '100vh',
+            position: 'relative', width: '100%',
+            height: isAbout ? 'auto' : '100vh',
             display: 'flex', alignItems: 'center',
             background: isEven ? '#0a0a0a' : '#0d0d0d',
             borderTop: '1px solid rgba(200,169,110,0.07)',
-            overflow: 'hidden',
+            overflow: isAbout ? 'visible' : 'hidden',
+            ...(isAbout && { minHeight: '100vh', padding: 'clamp(60px, 8vh, 100px) 0' }),
           }}>
             {/* 배경 글로우 */}
             <div style={{
@@ -290,76 +294,193 @@ export default function StartPage() {
               {String(i + 1).padStart(2, '0')}
             </span>
 
-            {/* 텍스트 + 콘텐츠 */}
-            <div style={{
-              position: 'relative', zIndex: 1,
-              padding: '0 clamp(40px, 9vw, 140px)',
-              maxWidth: 680,
-              marginLeft: isEven ? 0 : 'auto',
-              marginRight: isEven ? 'auto' : 0,
-            }}>
-              <p style={{
-                fontFamily: 'sans-serif', fontSize: 11,
-                letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 18,
-              }}>
-                {tag}
-              </p>
-              <h2 style={{
-                fontFamily: "'Noto Sans KR', sans-serif",
-                fontSize: 'clamp(36px, 5.5vw, 68px)',
-                fontWeight: 300, color: '#fff',
-                letterSpacing: '0.05em', lineHeight: 1.25, marginBottom: 14,
-              }}>
-                {label}
-              </h2>
-              <p style={{
-                fontFamily: "'Noto Sans KR', sans-serif",
-                fontSize: 14, color: 'rgba(255,255,255,0.4)',
-                lineHeight: 1.85, marginBottom: 44,
-              }}>
-                {sub}
-              </p>
-
-              {/* 콘텐츠 플레이스홀더 */}
+            {isAbout ? (
               <div style={{
-                width: '100%', height: 180,
-                border: '1px dashed rgba(200,169,110,0.18)',
-                borderRadius: 4,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: 44,
-                color: 'rgba(255,255,255,0.15)',
-                fontSize: 11, fontFamily: 'sans-serif', letterSpacing: '0.15em',
+                position: 'relative', zIndex: 1,
+                width: '100%',
+                paddingLeft: 0,
+                paddingRight: 'clamp(40px, 9vw, 140px)',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1.2fr',
+                gap: 'clamp(32px, 5vw, 80px)',
+                alignItems: 'center',
               }}>
-                CONTENT AREA
-              </div>
+                <div style={{
+                  width: '100%',
+                  overflow: 'hidden',
+                  borderRadius: 4,
+                  border: '1px solid rgba(200,169,110,0.2)',
+                }}>
+                  <Image
+                    src="/사장.jpg"
+                    alt="사장님"
+                    width={600}
+                    height={800}
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
+                </div>
 
-              <a
-                href={href}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <p style={{
+                    fontFamily: 'sans-serif', fontSize: 18,
+                    letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 18,
+                  }}>
+                    {tag}
+                  </p>
+                  <h2 style={{
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: 'clamp(39px, 4.5vw, 63px)',
+                    fontWeight: 300, color: '#fff',
+                    letterSpacing: '0.05em', lineHeight: 1.25, marginBottom: 32,
+                  }}>
+                    {label}
+                  </h2>
+
+                  {/* 직함 + 이름 */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
+                    <span style={{
+                      fontFamily: 'sans-serif', fontSize: 17,
+                      letterSpacing: '0.2em', color: '#c8a96e',
+                      border: '1px solid rgba(200,169,110,0.4)',
+                      padding: '4px 10px', borderRadius: 2,
+                    }}>대표</span>
+                    <span style={{
+                      fontFamily: "'Noto Sans KR', sans-serif",
+                      fontSize: 25, fontWeight: 500, color: '#fff',
+                      letterSpacing: '0.08em',
+                    }}>이기태</span>
+                  </div>
+
+                  {/* 후킹 제목 */}
+                  <p style={{
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: 'clamp(23px, 2.2vw, 28px)',
+                    fontWeight: 600, color: '#c8a96e',
+                    lineHeight: 1.6, letterSpacing: '0.02em',
+                    marginBottom: 20,
+                  }}>
+                    손님에서 직원으로 직원에서 연 10억매출 사장으로
+                  </p>
+                  {/* 소개 본문 */}
+                  <p style={{
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: 23, color: 'rgba(255,255,255,0.55)',
+                    lineHeight: 2.1, letterSpacing: '0.03em',
+                    marginBottom: 32,
+                  }}>
+                    김치짜글이만 찾던 제게 된장전골은 낯선 메뉴였습니다.<br />
+                    그런데 두 번, 세 번… 발걸음이 잦아질수록 묘한 매력에 빠져들었고, 본사 대표님을 찾아가 창업의 뜻을 전했으나<br />
+                    돌아온 답은 단호한 반대였습니다.<br />
+                    <span style={{ color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>"요식업은 아무나 하는 게 아닙니다. 직접 일해 보시고, 충분히 고민해 보세요."</span><br />
+                    고민 끝에 사직서를 내고 인수인계 기간동안 틈틈이 매장을 찾아 맞는길이 아니더라도 일내보자란 마인드로 배웠고,<br /> 퇴직 후엔 직영점 막내로 들어가 밑바닥부터 다시 배웠습니다. 매일 칼날에 손이베이고 설거지에 손이 부르트고 갈라지고, 하나라도 더 배우자는 생각에 14시간를 몰두하며 하루에 하나씩 기교 없이, 있는 그대로 천천히 익혀 나갔습니다.<br />
+                    그렇게 흘린 땀과 열정을 인정받아 2024년, 21호점을 허락받았고 지금의 옥된장 양재점이 탄생하게 되었습니다.<br />
+                    첫 요식업인 만큼 부족함도, 작은 실수도 있겠지만. 사소한 단점을 뒤로하고 옥된장 양재점이라는 이 공간안에서만큼 한 분 한 분이 따뜻한 정(情)을 느끼고 돌아가시길 바라는 마음으로 <br />매일 아침일찍 밥을 짓고, 한 분 한 분 기억하려 노력하고 먼저 인사하며, 같은 자리에서 같은 시간에 기다리고 있겠습니다.
+                  </p>
+
+                  {/* 구분선 */}
+                  <div style={{ width: 48, height: 1, background: 'rgba(200,169,110,0.35)', marginBottom: 28 }} />
+
+                  {/* 서명 */}
+                  <p style={{
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: 22, color: 'rgba(255,255,255,0.3)',
+                    lineHeight: 1.9, letterSpacing: '0.04em',
+                    marginBottom: 40,
+                  }}>
+                    — 옥된장 양재점 점주 이기태 드림
+                  </p>
+
+                  {/* 슬로건 */}
+                  <div style={{
+                    borderLeft: '2px solid #c8a96e',
+                    paddingLeft: 20,
+                  }}>
+                    <p style={{
+                      fontFamily: "'Noto Sans KR', sans-serif",
+                      fontSize: 'clamp(22px, 1.6vw, 27px)',
+                      fontWeight: 500,
+                      color: '#fff',
+                      lineHeight: 1.7,
+                      letterSpacing: '0.04em',
+                      margin: 0,
+                    }}>
+                      삭막한 세상,<br />
+                      <span style={{ color: '#c8a96e' }}>정(情)</span>이 뭔지 보여드리겠습니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div style={{
+                position: 'relative', zIndex: 1,
+                padding: '0 clamp(40px, 9vw, 140px)',
+                maxWidth: 680,
+                marginLeft: isEven ? 0 : 'auto',
+                marginRight: isEven ? 'auto' : 0,
+              }}>
+                <p style={{
+                  fontFamily: 'sans-serif', fontSize: 11,
+                  letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 18,
+                }}>
+                  {tag}
+                </p>
+                <h2 style={{
                   fontFamily: "'Noto Sans KR', sans-serif",
-                  fontSize: 13, fontWeight: 600, letterSpacing: '0.1em',
-                  color: '#c8a96e', textDecoration: 'none',
-                  borderBottom: '1px solid rgba(200,169,110,0.35)',
-                  paddingBottom: 4,
-                  marginTop: 44,
-                  transition: 'color 0.2s, border-color 0.2s',
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLAnchorElement).style.color = '#e8c98e';
-                  (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = '#e8c98e';
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e';
-                  (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = 'rgba(200,169,110,0.35)';
-                }}
-              >
-                자세히 보기
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                  <path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
-            </div>
+                  fontSize: 'clamp(36px, 5.5vw, 68px)',
+                  fontWeight: 300, color: '#fff',
+                  letterSpacing: '0.05em', lineHeight: 1.25, marginBottom: 14,
+                }}>
+                  {label}
+                </h2>
+                <p style={{
+                  fontFamily: "'Noto Sans KR', sans-serif",
+                  fontSize: 14, color: 'rgba(255,255,255,0.4)',
+                  lineHeight: 1.85, marginBottom: 44,
+                }}>
+                  {sub}
+                </p>
+
+                {/* 콘텐츠 플레이스홀더 */}
+                <div style={{
+                  width: '100%', height: 180,
+                  border: '1px dashed rgba(200,169,110,0.18)',
+                  borderRadius: 4,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  marginBottom: 44,
+                  color: 'rgba(255,255,255,0.15)',
+                  fontSize: 11, fontFamily: 'sans-serif', letterSpacing: '0.15em',
+                }}>
+                  CONTENT AREA
+                </div>
+
+                <Link
+                  href={href}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 10,
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: 13, fontWeight: 600, letterSpacing: '0.1em',
+                    color: '#c8a96e', textDecoration: 'none',
+                    borderBottom: '1px solid rgba(200,169,110,0.35)',
+                    paddingBottom: 4,
+                    marginTop: 44,
+                    transition: 'color 0.2s, border-color 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLAnchorElement).style.color = '#e8c98e';
+                    (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = '#e8c98e';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e';
+                    (e.currentTarget as HTMLAnchorElement).style.borderBottomColor = 'rgba(200,169,110,0.35)';
+                  }}
+                >
+                  자세히 보기
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                    <path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              </div>
+            )}
           </section>
         );
       })}
@@ -476,7 +597,7 @@ export default function StartPage() {
             >
               📞 070-8657-2499
               <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                <path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M0 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
           </div>
@@ -569,11 +690,11 @@ export default function StartPage() {
             <div style={{ width: 148, padding: '24px 18px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
               {/* 캘린더 아이콘 */}
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ color: '#c8a96e', flexShrink: 0 }}>
-                <rect x="2" y="3.5" width="18" height="16" rx="2.5" stroke="currentColor" strokeWidth="1.4"/>
-                <path d="M7 1.5v4M15 1.5v4M2 9h18" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                <circle cx="7.5" cy="14" r="1" fill="currentColor"/>
-                <circle cx="11" cy="14" r="1" fill="currentColor"/>
-                <circle cx="14.5" cy="14" r="1" fill="currentColor"/>
+                <rect x="2" y="3.5" width="18" height="16" rx="2.5" stroke="currentColor" strokeWidth="1.4" />
+                <path d="M7 1.5v4M15 1.5v4M2 9h18" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                <circle cx="7.5" cy="14" r="1" fill="currentColor" />
+                <circle cx="11" cy="14" r="1" fill="currentColor" />
+                <circle cx="14.5" cy="14" r="1" fill="currentColor" />
               </svg>
 
               {/* 구분선 */}
