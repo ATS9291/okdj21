@@ -1,5 +1,6 @@
 export type CategoryId = 'doenjang' | 'sundubu' | 'sukyuk' | 'byeolmi';
-export type MenuItem = { name: string; desc: string; price?: string };
+export type PriceTier = { label: string; price: string };
+export type MenuItem = { name: string; desc: string; price?: string; prices?: PriceTier[] };
 export type Category = {
   id: CategoryId;
   label: string;
@@ -18,12 +19,15 @@ export const CATEGORIES: Category[] = [
     en: 'DOENJANG JJEONGOL',
     image: '/menu-된장전골-detail.jpg',
     imagePosition: '30% 70%',
-    tagline: '20년 숙성 항아리 된장 베이스',
+    tagline: '50년 비밀 된장 레시피',
     items: [
-      { name: '된장 버섯전골', desc: '국내산 버섯과 항아리 된장으로 끓인 깊고 구수한 전골', price: '22,000원 (2인)' },
-      { name: '된장 두부전골', desc: '국산 두부를 넉넉히 넣어 담백하게 끓인 된장 전골', price: '20,000원 (2인)' },
-      { name: '된장 해물전골', desc: '싱싱한 해물과 된장이 어우러지는 시원하고 깊은 전골', price: '26,000원 (2인)' },
-      { name: '된장 쇠고기전골', desc: '국내산 쇠고기와 묵은 된장의 진한 풍미가 가득한 전골', price: '28,000원 (2인)' },
+      { name: '들깨미역 된장전골', desc: '들깨와 미역을 넣어 끓인 고소하고 구수한 된장전골', price: '12,000원' },
+      { name: '소고기삼겹 된장전골', desc: '소고기와 삼겹살을 넣어 끓인 진하고 풍부한 된장전골', price: '13,000원' },
+      { name: '우렁 된장전골', desc: '우렁을 넣어 끓인 담백하고 깊은 된장전골', price: '13,000원' },
+      { name: '오징어 된장전골', desc: '오징어를 넣어 끓인 쫄깃하고 시원한 된장전골', price: '13,000원' },
+      { name: '표고버섯 된장전골', desc: '표고버섯을 넣어 끓인 향긋하고 구수한 된장전골', price: '13,000원' },
+      { name: '스지 된장전골', desc: '소 힘줄을 넣어 끓인 진하고 깊은 된장전골', price: '13,000원' },
+      { name: '바지락 된장전골', desc: '바지락을 넣어 끓인 시원하고 감칠맛 나는 된장전골', price: '13,000원' },
     ],
   },
   {
@@ -32,12 +36,14 @@ export const CATEGORIES: Category[] = [
     en: 'SUNDUBU JJEONGOL',
     image: '/menu-순두부전골-detail.jpg',
     imageScale: 1.20,
-    tagline: '부드러운 순두부와 해물의 조화',
+    tagline: '칼칼함과 부드러움의 만남',
     items: [
-      { name: '해물 순두부전골', desc: '싱싱한 해물과 부드러운 순두부가 어우러진 얼큰한 전골', price: '24,000원 (2인)' },
-      { name: '버섯 순두부전골', desc: '다양한 버섯과 순두부를 넣어 끓인 담백하고 깊은 전골', price: '22,000원 (2인)' },
-      { name: '김치 순두부전골', desc: '잘 익은 김치와 부드러운 순두부가 어우러진 얼큰한 전골', price: '22,000원 (2인)' },
-      { name: '낙지 순두부전골', desc: '통통한 낙지와 순두부를 넣어 끓인 해물 순두부 전골', price: '26,000원 (2인)' },
+      { name: '바지락 순두부전골', desc: '바지락을 넣어 끓인 시원하고 감칠맛 나는 순두부전골', price: '13,000원' },
+      { name: '소고기삼겹 순두부전골', desc: '소고기와 삼겹살을 넣어 끓인 진하고 풍부한 순두부전골', price: '13,000원' },
+      { name: '우렁 순두부전골', desc: '우렁을 넣어 끓인 담백하고 깊은 순두부전골', price: '13,000원' },
+      { name: '오징어 순두부전골', desc: '오징어를 넣어 끓인 쫄깃하고 시원한 순두부전골', price: '13,000원' },
+      { name: '표고버섯 순두부전골', desc: '표고버섯을 넣어 끓인 향긋하고 부드러운 순두부전골', price: '13,000원' },
+      { name: '스지 순두부전골', desc: '소 힘줄을 넣어 끓인 진하고 깊은 순두부전골', price: '14,000원' },
     ],
   },
   {
@@ -46,12 +52,11 @@ export const CATEGORIES: Category[] = [
     en: 'SUYUK JJEONGOL',
     image: '/menu-수육전골-detail.jpg',
     imagePosition: 'center 42%',
-    tagline: '국내산 수육과 된장의 깊은 맛',
+    tagline: '술안주 겸 해장까지 가능한 혜자메뉴',
     items: [
-      { name: '차돌박이 된장전골', desc: '차돌박이와 묵은 된장으로 끓인 풍부하고 진한 전골', price: '30,000원 (2인)' },
-      { name: '삼겹 수육전골', desc: '부드럽게 삶은 삼겹수육과 된장 육수의 조화로운 전골', price: '26,000원 (2인)' },
-      { name: '돼지 수육전골', desc: '담백하게 삶은 돼지수육과 구수한 된장 육수의 전골', price: '24,000원 (2인)' },
-      { name: '수육 모둠전골', desc: '다양한 수육을 한 자리에서 즐기는 푸짐한 모둠 전골', price: '32,000원 (2인)' },
+      { name: '모둠수육전골', desc: '다양한 수육을 한 자리에서 즐기는 푸짐한 전골', prices: [{ label: '소', price: '25,000원' }, { label: '중', price: '38,000원' }, { label: '대', price: '55,000원' }] },
+      { name: '소갈비수육전골', desc: '소갈비를 넣어 끓인 깊고 진한 수육전골', prices: [{ label: '중', price: '55,000원' }, { label: '대', price: '85,000원' }] },
+      { name: '소꼬리전골', desc: '소꼬리를 넣어 끓인 진하고 풍부한 전골', prices: [{ label: '중', price: '65,000원' }, { label: '대', price: '95,000원' }] },
     ],
   },
   {
@@ -60,12 +65,16 @@ export const CATEGORIES: Category[] = [
     en: 'BYEOLMI CHARIM',
     image: '/menu-별미차림-detail.jpg',
     imagePosition: 'center 55%',
-    tagline: '계절 재료로 차린 별미 한상',
+    tagline: '안먹어본 사람은 있어도 한번먹어본사람은 없는 메뉴',
     items: [
-      { name: '옥된장 정식', desc: '된장찌개, 순두부, 구이, 밑반찬이 함께하는 푸짐한 정식', price: '15,000원' },
-      { name: '쌈밥 정식', desc: '직접 담근 된장과 쌈채소, 6가지 밑반찬이 함께하는 정식', price: '13,000원' },
-      { name: '미나리전 상차림', desc: '향긋한 미나리전과 된장찌개, 밥, 밑반찬 한 상차림', price: '14,000원' },
-      { name: '청국장 정식', desc: '직접 띄운 청국장찌개와 구이, 밑반찬이 함께하는 정식', price: '11,000원' },
+      { name: '오징어미나리전', desc: '오징어와 향긋한 미나리를 넣어 부친 바삭한 전', price: '20,000원' },
+      { name: '보리새우미나리전', desc: '보리새우와 미나리를 넣어 고소하게 부친 전', price: '17,000원' },
+      { name: '우렁미나리전', desc: '우렁과 미나리를 넣어 담백하게 부친 전', price: '15,000원' },
+      { name: '오징어제육두루치기', desc: '오징어와 제육을 넣어 매콤하게 볶은 두루치기', price: '29,000원' },
+      { name: '불스지볶음', desc: '스지를 넣어 매콤하게 볶은 안주', price: '15,000원' },
+      { name: '소고기삼겹두부김치', desc: '소고기, 삼겹살과 잘 익은 김치를 두부와 함께 볶은 요리', price: '15,000원' },
+      { name: '모둠수육무침', desc: '다양한 수육을 새콤달콤 양념에 버무린 무침', price: '25,000원' },
+      { name: '오징어미나리초무침', desc: '오징어와 미나리를 새콤달콤하게 버무린 초무침', price: '22,000원' },
     ],
   },
 ];

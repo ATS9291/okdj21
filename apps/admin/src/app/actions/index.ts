@@ -22,7 +22,46 @@ export async function adminLogout() {
   redirect('/login');
 }
 
+async function sendSms(phone: string, message: string) {
+  const form = new FormData();
+  form.append('key',         process.env.ALIGO_API_KEY!);
+  form.append('user_id',     process.env.ALIGO_USER_ID!);
+  form.append('sender',      process.env.ALIGO_SENDER!);
+  form.append('receiver',    phone.replace(/-/g, ''));
+  form.append('msg',         message);
+  form.append('testmode_yn', 'N');
+  const res = await fetch('https://apis.aligo.in/send/', { method: 'POST', body: form });
+  return res.json();
+}
+
 export async function updateReservationStatus(id: string, status: 'confirmed' | 'cancelled') {
+  if (status === 'confirmed') {
+    const { data: r, error } = await client
+      .from('reservations')
+      .update({ status })
+      .eq('id', id)
+      .select('name, phone, date, time, party_size')
+      .single();
+    if (error) return { error: error.message };
+
+    if (r) {
+      try {
+        const dateFormatted = new Date(r.date).toLocaleDateString('ko-KR', {
+          month: 'long', day: 'numeric', weekday: 'short',
+        });
+        const msg =
+          `[옥된장 양재점] ${r.name}님, 예약이 확정되었습니다!\n` +
+          `📅 ${dateFormatted} ${r.time} / ${r.party_size}명\n` +
+          `📍 서울 서초구 서운로6길 29, 1층\n` +
+          `문의: 070-8657-2499`;
+        await sendSms(r.phone, msg);
+      } catch (e) {
+        console.error('SMS error:', e);
+      }
+    }
+    return { success: true };
+  }
+
   const { error } = await client.from('reservations').update({ status }).eq('id', id);
   if (error) return { error: error.message };
   return { success: true };

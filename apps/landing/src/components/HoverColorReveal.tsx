@@ -233,30 +233,25 @@ export default function HoverColorReveal({ src, radius = 200, softness = 0.6, zo
     if (vignetteRef.current) vignetteRef.current.style.opacity = '0';
   }, []);
 
-  // ── 클릭 존 이동: 줌인 시작 + DoorOverlay에 doorClose 이벤트 전달 ──────
+  // ── 클릭 존 이동: 문 방향 줌인 + 갈색 페이드 전환 ──────────────────────
   const navigateTo = useCallback((href: string) => {
     const wrapper = wrapperRef.current;
-
     navigatingRef.current = true;
     if (vignetteRef.current) vignetteRef.current.style.opacity = '0';
 
     if (wrapper) {
       const DOOR_X = 0.33;
       const DOOR_Y = 0.67;
-      const W = window.innerWidth;
-      const H = window.innerHeight;
-      const tx = W * (0.5 - DOOR_X);
-      const ty = H * (0.5 - DOOR_Y);
-
       gsap.killTweensOf(wrapper);
       gsap.set(wrapper, {
         rotateX: 0, rotateY: 0, x: 0, y: 0, scale: 1,
         transformOrigin: `${DOOR_X * 100}% ${DOOR_Y * 100}%`,
       });
-      gsap.to(wrapper, { scale: 6, x: tx, y: ty, duration: 3.0, ease: 'power2.inOut' });
+      // 6.1s 동안 문 방향으로 줌인: 처음엔 아주 천천히 걸어가듯, 끝으로 갈수록 가파르게 가속
+      gsap.to(wrapper, { scale: 25, duration: 6.1, ease: 'power3.in' });
     }
 
-    // DoorOverlay가 패널 닫힘 + 라우팅을 처리
+    // DoorOverlay가 동시에 갈색으로 어두워지며 라우팅 처리
     window.dispatchEvent(new CustomEvent('doorClose', { detail: { href } }));
   }, []);
 

@@ -7,6 +7,15 @@ import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
 import { CATEGORIES } from '@/lib/menu-data';
 
+const PRICE_LABEL_STYLE = {
+  fontFamily: 'sans-serif', fontSize: 10,
+  letterSpacing: '0.18em', color: 'rgba(200,169,110,0.55)',
+};
+const PRICE_VALUE_STYLE = {
+  fontFamily: 'sans-serif', fontSize: 13,
+  letterSpacing: '0.06em', color: '#c8a96e',
+};
+
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
   const current = CATEGORIES.find(c => c.id === category);
@@ -164,13 +173,17 @@ export default function CategoryPage() {
               }}>
                 {item.desc}
               </p>
-              {item.price && (
-                <span style={{
-                  fontFamily: 'sans-serif', fontSize: 13,
-                  letterSpacing: '0.06em', color: '#c8a96e',
-                }}>
-                  {item.price}
-                </span>
+              {item.prices ? (
+                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                  {item.prices.map(tier => (
+                    <span key={tier.label} style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                      <span style={PRICE_LABEL_STYLE}>{tier.label}</span>
+                      <span style={PRICE_VALUE_STYLE}>{tier.price}</span>
+                    </span>
+                  ))}
+                </div>
+              ) : item.price && (
+                <span style={PRICE_VALUE_STYLE}>{item.price}</span>
               )}
             </div>
           ))}

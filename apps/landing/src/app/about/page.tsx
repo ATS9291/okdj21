@@ -27,8 +27,8 @@ const PEOPLE: Person[] = [
     name: '김철수',
     role: '대표',
     initials: '김',
-    quote: '좋은 재료가 곧 철학입니다.',
-    story: '20년 전, 국내산 콩 100%로만 된장을 담그겠다고 결심했습니다. 빠른 것보다 바른 것을 선택한 그 고집이 지금의 옥된장을 만들었습니다. 매일 아침 항아리를 열어보는 그 설렘은 여전합니다.',
+    quote: '손님으로 처음 맛본 된장전골 한 그릇이 제 인생을 바꿨습니다.',
+    story: '두 번, 세 번 발걸음이 잦아지다 결국 다니던 회사에 사직서를 냈습니다. 본사 대표님은 단호했습니다. "요식업은 아무나 하는 게 아닙니다. 직접 일해 보세요." 그 말을 듣고 직영점 막내로 들어가 매일 14시간씩 칼질에 손이 베이고, 설거지에 손이 부르트며 밑바닥부터 익혔습니다. 기교 없이, 하루에 하나씩, 있는 그대로.\n\n흘린 땀을 인정받아 2024년, 21호점 옥된장 양재점을 열었습니다. 지금도 매일 아침 직접 밥을 짓고, 오신 분 한 분 한 분을 기억하며 먼저 인사드립니다. 이 공간 안에서만큼은 따뜻한 정(情)을 느끼고 가시도록, 오늘도 같은 자리에서 기다리고 있겠습니다.',
     tilt: 1.5,
   },
 ];
@@ -129,10 +129,12 @@ function PersonCard({ person, delay }: { person: Person; delay: number }) {
           backfaceVisibility: 'hidden',
           transform: 'rotateY(180deg)',
           display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          overflowY: 'auto',
         }}>
           <p style={{
             fontFamily: "'Noto Sans KR', sans-serif",
             fontSize: 13, color: 'rgba(255,255,255,0.8)', lineHeight: 2,
+            whiteSpace: 'pre-line',
           }}>
             {person.story}
           </p>

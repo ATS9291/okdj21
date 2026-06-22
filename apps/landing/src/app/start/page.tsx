@@ -9,10 +9,10 @@ import { NORIGAE_CURSOR } from '@/lib/cursor';
 import { SOCIAL_LINKS } from '@/lib/constants';
 
 const MENU_ITEMS = [
-  { num: '01', name: '된장전골', en: 'DOENJANG JJEONGOL', desc: '20년 숙성 항아리 된장 베이스', price: '13,000', img: '/menu-된장전골.jpg', imgPos: 'center 50%', href: '/menu/doenjang' },
-  { num: '02', name: '순두부전골', en: 'SUNDUBU JJEONGOL', desc: '부드러운 순두부와 해물의 조화', price: '14,000', img: '/menu-순두부전골.png', imgPos: 'center 50%', href: '/menu/sundubu' },
-  { num: '03', name: '수육전골', en: 'SUYUK JJEONGOL', desc: '국내산 수육과 된장의 깊은 맛', price: '55,000', img: '/menu-수육전골.png', imgPos: 'center 50%', href: '/menu/sukyuk' },
-  { num: '04', name: '별미차림', en: 'BYEOLMI CHARIM', desc: '계절 재료로 차린 별미 한상', price: '20,000', img: '/menu-별미차림.jpg', imgPos: 'center 50%', href: '/menu/byeolmi' },
+  { num: '01', name: '된장전골', en: 'DOENJANG JJEONGOL', desc: '50년 비밀 된장 레시피', price: '13,000', img: '/menu-된장전골.jpg', imgPos: 'center 50%', href: '/menu/doenjang' },
+  { num: '02', name: '순두부전골', en: 'SUNDUBU JJEONGOL', desc: '칼칼함과 부드러움의 만남', price: '14,000', img: '/menu-순두부전골.png', imgPos: 'center 50%', href: '/menu/sundubu' },
+  { num: '03', name: '수육전골', en: 'SUYUK JJEONGOL', desc: '술안주 겸 해장까지 가능한 혜자메뉴', price: '55,000', img: '/menu-수육전골.png', imgPos: 'center 50%', href: '/menu/sukyuk' },
+  { num: '04', name: '별미차림', en: 'BYEOLMI CHARIM', desc: '안먹어본 사람은 있어도 한번먹어본사람은 없는 메뉴', price: '20,000', img: '/menu-별미차림.jpg', imgPos: 'center 50%', href: '/menu/byeolmi' },
 ];
 
 const SECTIONS = [
@@ -60,7 +60,7 @@ export default function StartPage() {
     const ctx = gsap.context(() => {
       gsap.fromTo(titleRef.current,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: isDoorEntry ? 2.2 : 0.3 }
+        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: isDoorEntry ? 0.6 : 0.3 }
       );
     });
 
@@ -110,6 +110,7 @@ export default function StartPage() {
           muted
           loop
           playsInline
+          preload="auto"
           style={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
@@ -469,7 +470,7 @@ export default function StartPage() {
                     lineHeight: 1.6, letterSpacing: '0.02em',
                     marginBottom: 20,
                   }}>
-                    손님에서 직원으로 직원에서 연 10억매출 사장으로
+                    손님으로 처음 맛본 된장전골 한 그릇이 제 인생을 바꿨습니다.
                   </p>
                   {/* 소개 본문 */}
                   <p style={{
@@ -478,13 +479,16 @@ export default function StartPage() {
                     lineHeight: 2.1, letterSpacing: '0.03em',
                     marginBottom: 32,
                   }}>
-                    김치짜글이만 찾던 제게 된장전골은 낯선 메뉴였습니다.<br />
-                    그런데 두 번, 세 번… 발걸음이 잦아질수록 묘한 매력에 빠져들었고, 본사 대표님을 찾아가 창업의 뜻을 전했으나<br />
-                    돌아온 답은 단호한 반대였습니다.<br />
-                    <span style={{ color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>"요식업은 아무나 하는 게 아닙니다. 직접 일해 보시고, 충분히 고민해 보세요."</span><br />
-                    고민 끝에 사직서를 내고 인수인계 기간동안 틈틈이 매장을 찾아 맞는길이 아니더라도 일내보자란 마인드로 배웠고,<br /> 퇴직 후엔 직영점 막내로 들어가 밑바닥부터 다시 배웠습니다.<br /> 매일 칼날에 손이베이고 설거지에 손이 부르트고 갈라지고, <br />하나라도 더 배우자는 생각에 14시간를 몰두하며 하루에 하나씩 기교 없이, 있는 그대로 천천히 익혀 나갔습니다.<br />
-                    그렇게 흘린 땀과 열정을 인정받아 2024년, 21호점을 허락받았고 <br />지금의 옥된장 양재점이 탄생하게 되었습니다.<br />
-                    부족하지만 확고한 운영철학은 옥된장 양재점이라는 공간안에서만큼 한 분 한 분이 따뜻한 정(情)을 느끼게, 해드리자이며 <br />초심을 잃지 않기 위해 매일 아침일찍 밥을 짓고, 한 분 한 분 기억하려 노력하고 먼저 인사하며, 같은 자리에서 같은 시간에 기다리고 있겠습니다.
+                    두 번, 세 번 발걸음이 잦아지다 결국 다니던 회사에 사직서를 냈습니다.<br />
+                    본사 대표님은 단호했습니다.<br />
+                    <span style={{ color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>"요식업은 아무나 하는 게 아닙니다. 직접 일해 보세요."</span><br />
+                    그 말을 듣고 직영점 막내로 들어가 매일 14시간씩 칼질에 손이 베이고,<br />
+                    설거지에 손이 부르트며 밑바닥부터 익혔습니다.<br />
+                    기교 없이, 하루에 하나씩, 있는 그대로.<br /><br />
+                    흘린 땀을 인정받아 2024년, 21호점 옥된장 양재점을 열었습니다.<br /><br />
+                    지금도 매일 아침 직접 밥을 짓고, 오신 분 한 분 한 분을 기억하며 먼저 인사드립니다.<br />
+                    이 공간 안에서만큼은 따뜻한 정(情)을 느끼고 가시도록,<br />
+                    오늘도 같은 자리에서 기다리고 있겠습니다.
                   </p>
 
                   {/* 구분선 */}
