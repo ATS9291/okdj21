@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import PostHogInit from '@/components/PostHogInit';
+import { DoorOverlay } from '@/components/DoorOverlay';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://okdj21.com';
 
@@ -205,6 +206,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <PostHogInit />
+        <DoorOverlay />
         {children}
       </body>
     </html>

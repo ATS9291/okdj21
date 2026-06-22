@@ -20,15 +20,21 @@ const SECTIONS = [
   { label: '블로그', sub: '장사 노하우 · 재료 이야기', href: '/blog', tag: 'BLOG' },
 ];
 
-const YOUTUBE_VIDEO_ID = 'VIDEO_ID_HERE';
-
 export default function StartPage() {
   const titleRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [showWidget, setShowWidget] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<number | null>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50 });
+  // 문 입장 전환 여부 — 동기 초기화로 첫 렌더부터 패널 표시
+  const [isDoorEntry] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const val = sessionStorage.getItem('doorEntry') === '1';
+    if (val) sessionStorage.removeItem('doorEntry');
+    return val;
+  });
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -44,13 +50,21 @@ export default function StartPage() {
     setGlare({ x: 50, y: 50 });
   };
 
+  // 문 입장 시 layout의 DoorOverlay에 패널 열기 신호
+  useEffect(() => {
+    if (!isDoorEntry) return;
+    window.dispatchEvent(new Event('doorOpen'));
+  }, [isDoorEntry]);
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(titleRef.current,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.3 }
+        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: isDoorEntry ? 2.2 : 0.3 }
       );
     });
+
+    if (videoRef.current) videoRef.current.playbackRate = 0.9;
 
     const onScroll = () => setShowWidget(window.scrollY > window.innerHeight * 0.6);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -63,31 +77,127 @@ export default function StartPage() {
       <SiteNav />
 
       {/* ── 히어로 영상 ─────────────────────────────────────── */}
-      <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
-        <iframe
-          src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&loop=1&playlist=${YOUTUBE_VIDEO_ID}&controls=0&showinfo=0&rel=0&modestbranding=1`}
-          allow="autoplay; fullscreen"
+      <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', animation: 'projectorFlicker 6s infinite' }}>
+
+        {/* SVG 필터 정의 */}
+        <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+          <defs>
+            {/* 유기적 필름 그레인 */}
+            <filter id="filmGrain" x="0%" y="0%" width="100%" height="100%" colorInterpolationFilters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="4" stitchTiles="stitch">
+                <animate attributeName="seed" values="0;3;7;1;9;4;6;2;8;5;0" dur="0.07s" repeatCount="indefinite" />
+              </feTurbulence>
+              <feColorMatrix type="matrix"
+                values="0 0 0 0 0.52
+                        0 0 0 0 0.42
+                        0 0 0 0 0.22
+                        0 0 0 0.42 0" />
+            </filter>
+            {/* 미세 입자 */}
+            <filter id="fineGrain" x="0%" y="0%" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" stitchTiles="stitch">
+                <animate attributeName="seed" values="5;2;8;0;6;3;9;1;7;4;5" dur="0.05s" repeatCount="indefinite" />
+              </feTurbulence>
+              <feColorMatrix type="saturate" values="0" />
+            </filter>
+          </defs>
+        </svg>
+
+        {/* 영상 — 80년대 필름 색감 */}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
           style={{
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
             width: '177.78vh', minWidth: '100%',
             height: '56.25vw', minHeight: '100%',
-            border: 'none', pointerEvents: 'none',
+            objectFit: 'cover', pointerEvents: 'none',
+            filter: 'sepia(0.28) contrast(1.06) brightness(0.82) saturate(0.65) hue-rotate(-6deg)',
           }}
-          title="옥된장 영상"
-        />
+        >
+          <source src="/hero.mp4" type="video/mp4" />
+        </video>
+
+        {/* 필름 베이스 포그 — 블랙 리프트 (필름은 순수 검정이 없다) */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0) 40%, rgba(10,10,10,0.6) 80%, rgba(10,10,10,1) 100%)',
+          background: 'rgba(48, 36, 16, 0.09)',
+          mixBlendMode: 'screen',
+          pointerEvents: 'none',
         }} />
-        <div ref={titleRef} style={{ position: 'absolute', bottom: 100, left: 0, right: 0, textAlign: 'center', opacity: 0 }}>
+
+        {/* 색 그레이딩 — 그림자 청록, 하이라이트 앰버 */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(160deg, rgba(200,155,60,0.1) 0%, transparent 45%, rgba(18,38,52,0.22) 100%)',
+          mixBlendMode: 'soft-light',
+          pointerEvents: 'none',
+        }} />
+
+        {/* 라이트 리크 — 상단 좌측 앰버 (80년대 필름 번짐) */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(ellipse at 12% 0%, rgba(220,155,40,0.22) 0%, rgba(180,100,20,0.08) 38%, transparent 62%)',
+          mixBlendMode: 'screen',
+          pointerEvents: 'none',
+        }} />
+
+        {/* 유기적 필름 그레인 */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          filter: 'url(#filmGrain)',
+          opacity: 0.55,
+          mixBlendMode: 'overlay',
+          pointerEvents: 'none',
+          background: 'white',
+        }} />
+
+        {/* 미세 그레인 */}
+        <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', opacity: 0.18, mixBlendMode: 'overlay' } as React.CSSProperties}>
+          <rect width="100%" height="100%" filter="url(#fineGrain)" />
+        </svg>
+
+        {/* 필름 스크래치 — 세로 라인 (불규칙 나타남) */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'repeating-linear-gradient(90deg, transparent 0px, transparent 320px, rgba(255,230,180,0.03) 320px, rgba(255,230,180,0.03) 321px)',
+          animation: 'scratchMove 0.25s steps(1) infinite',
+          pointerEvents: 'none',
+          mixBlendMode: 'screen',
+        }} />
+
+        {/* 강한 비네트 — 80년대 렌즈 특성 */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(ellipse at 50% 48%, transparent 40%, rgba(12,8,4,0.55) 72%, rgba(6,4,2,0.88) 100%)',
+          pointerEvents: 'none',
+        }} />
+
+        {/* 하단 페이드 */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, rgba(10,10,10,0.08) 0%, transparent 30%, rgba(10,10,10,0.5) 76%, rgba(10,10,10,1) 100%)',
+        }} />
+
+        {/* 슬로건 (하단) */}
+        <div ref={titleRef} style={{
+          position: 'absolute', bottom: 100, left: 0, right: 0,
+          textAlign: 'center',
+          opacity: 0,
+        }}>
           <h1 style={{
             fontFamily: "'Noto Sans KR', sans-serif",
-            fontSize: 'clamp(35px, 5.2vw, 59px)',
-            fontWeight: 800, color: '#fff',
+            fontSize: 'clamp(36px, 4.6vw, 60px)',
+            fontWeight: 800,
             letterSpacing: '0.06em', lineHeight: 1.2,
             whiteSpace: 'nowrap',
-            textShadow: '0 2px 32px rgba(0,0,0,0.6), 0 0 80px rgba(200,169,110,0.18)',
+            margin: 0,
+            color: '#c8a96e',
+            textShadow: '0 2px 32px rgba(0,0,0,0.7), 0 0 60px rgba(200,169,110,0.25)',
           }}>
             우리의 미친짓이 내일의 기준이 된다
           </h1>
@@ -785,6 +895,31 @@ export default function StartPage() {
         @keyframes bob {
           0%, 100% { transform: translateX(-50%) translateY(0); }
           50%       { transform: translateX(-50%) translateY(7px); }
+        }
+        /* 영사기 특유의 불규칙 밝기 떨림 */
+        @keyframes projectorFlicker {
+          0%,  100% { opacity: 1; }
+          8%         { opacity: 0.93; }
+          9%         { opacity: 1; }
+          22%        { opacity: 1; }
+          23%        { opacity: 0.86; }
+          24%        { opacity: 0.97; }
+          25%        { opacity: 1; }
+          51%        { opacity: 1; }
+          52%        { opacity: 0.91; }
+          53%        { opacity: 1; }
+          78%        { opacity: 1; }
+          79%        { opacity: 0.89; }
+          80%        { opacity: 0.96; }
+          81%        { opacity: 1; }
+        }
+        /* 필름 스크래치 위치 이동 */
+        @keyframes scratchMove {
+          0%   { background-position: 0 0; }
+          25%  { background-position: -48px 0; }
+          50%  { background-position: 112px 0; }
+          75%  { background-position: -90px 0; }
+          100% { background-position: 30px 0; }
         }
       `}</style>
     </main>

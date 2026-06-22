@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useEffect, useCallback, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 
 // ── 노리개 커서 ──────────────────────────────────────────────────────────────
@@ -59,10 +58,8 @@ interface Props {
 }
 
 export default function HoverColorReveal({ src, radius = 200, softness = 0.6, zones = [] }: Props) {
-  const router        = useRouter();
   const outerRef      = useRef<HTMLDivElement>(null);   // perspective 컨테이너
   const wrapperRef    = useRef<HTMLDivElement>(null);   // 3D 틸트 대상
-  const overlayRef    = useRef<HTMLDivElement>(null);   // 페이지 전환 오버레이
   const canvasRef     = useRef<HTMLCanvasElement>(null);
   const trailRef      = useRef<HTMLCanvasElement | null>(null);
   const colorImgRef   = useRef<HTMLImageElement | null>(null);
@@ -72,6 +69,7 @@ export default function HoverColorReveal({ src, radius = 200, softness = 0.6, zo
   const tiltRef       = useRef(true);   // 처음부터 틸트 활성
   const zonesRef      = useRef(false);  // 97% 이후 클릭존 활성
   const navigatingRef = useRef(false);  // 줌인 이동 중 마우스 틸트 차단
+  const vignetteRef   = useRef<HTMLDivElement>(null);  // 근접 비네트
   const [fillPct, setFillPct] = useState(0);
   const [tiltOn,  setTiltOn]  = useState(false);
   const [, setHoveredZone] = useState<string | null>(null);
@@ -206,6 +204,13 @@ export default function HoverColorReveal({ src, radius = 200, softness = 0.6, zo
       tCtx.arc(x, y, radius, 0, Math.PI * 2);
       tCtx.fill();
     }
+    // 근접 비네트: 문에 가까울수록 주변이 어두워짐
+    if (vignetteRef.current && !navigatingRef.current) {
+      const dx = (e.clientX / window.innerWidth) - 0.38;
+      const dy = (e.clientY / window.innerHeight) - 0.585;
+      const proximity = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 0.38);
+      vignetteRef.current.style.opacity = String(proximity * 0.75);
+    }
     if (!tiltRef.current || !wrapperRef.current || navigatingRef.current) return;
     const cx = window.innerWidth  / 2;
     const cy = window.innerHeight / 2;
@@ -224,43 +229,36 @@ export default function HoverColorReveal({ src, radius = 200, softness = 0.6, zo
   }, [radius, softness]);
 
   const handleMouseLeave = useCallback(() => {
-    // 마우스가 UI를 벗어나면 현재 위치/기울기에서 그대로 정지
-    // 마우스가 다시 돌아오면 handleMouseMove가 새 위치로 자연스럽게 재개
     gsap.killTweensOf(wrapperRef.current);
+    if (vignetteRef.current) vignetteRef.current.style.opacity = '0';
   }, []);
 
-  // ── 클릭 존 이동 (파사드 입구 줌인 → 0.5s 정지 → 검정 페이드 → 이동) ──
+  // ── 클릭 존 이동: 줌인 시작 + DoorOverlay에 doorClose 이벤트 전달 ──────
   const navigateTo = useCallback((href: string) => {
-    const overlay = overlayRef.current;
     const wrapper = wrapperRef.current;
-    if (!wrapper) { router.push(href); return; }
 
-    // 이동 중 마우스 틸트/스케일 덮어쓰기 차단
     navigatingRef.current = true;
+    if (vignetteRef.current) vignetteRef.current.style.opacity = '0';
 
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const DOOR_X = 0.33;
-    const DOOR_Y = 0.67;
-    const tx = W * (0.5 - DOOR_X);
-    const ty = H * (0.5 - DOOR_Y);
+    if (wrapper) {
+      const DOOR_X = 0.33;
+      const DOOR_Y = 0.67;
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const tx = W * (0.5 - DOOR_X);
+      const ty = H * (0.5 - DOOR_Y);
 
-    gsap.killTweensOf(wrapper);
-    gsap.set(wrapper, {
-      rotateX: 0, rotateY: 0, x: 0, y: 0, scale: 1,
-      transformOrigin: `${DOOR_X * 100}% ${DOOR_Y * 100}%`,
-    });
+      gsap.killTweensOf(wrapper);
+      gsap.set(wrapper, {
+        rotateX: 0, rotateY: 0, x: 0, y: 0, scale: 1,
+        transformOrigin: `${DOOR_X * 100}% ${DOOR_Y * 100}%`,
+      });
+      gsap.to(wrapper, { scale: 6, x: tx, y: ty, duration: 3.0, ease: 'power2.inOut' });
+    }
 
-    const tl = gsap.timeline();
-    // 줌인 시작과 동시에 페이드, 같은 duration으로 자연스럽게 완료
-    tl.to(wrapper, { scale: 7, x: tx, y: ty, duration: 3.7, ease: 'power1.inOut' }, 0)
-      .to(overlay, {
-        opacity: 1,
-        duration: 2.5,
-        ease: 'power2.in',
-        onComplete: () => router.push(href),
-      }, 0);
-  }, [router]);
+    // DoorOverlay가 패널 닫힘 + 라우팅을 처리
+    window.dispatchEvent(new CustomEvent('doorClose', { detail: { href } }));
+  }, []);
 
   // ── 97% 이전 조기 클릭: 전체 채색 후 이동 ─────────────────────────────
   const handleEarlyClick = useCallback((href: string) => {
@@ -278,10 +276,13 @@ export default function HoverColorReveal({ src, radius = 200, softness = 0.6, zo
 
   return (
     <>
-    {/* 페이지 전환 오버레이 — perspective 바깥에 위치해야 3D 스태킹에 묻히지 않음 */}
-    <div ref={overlayRef} style={{
-      position: 'fixed', inset: 0, background: '#000',
-      opacity: 0, zIndex: 9999, pointerEvents: 'none',
+    {/* 근접 비네트 — 문에 가까울수록 주변이 어두워짐 */}
+    <div ref={vignetteRef} style={{
+      position: 'fixed', inset: 0,
+      background: 'radial-gradient(ellipse 45% 55% at 38% 58.5%, transparent 0%, rgba(0,0,0,0.88) 100%)',
+      opacity: 0,
+      transition: 'opacity 0.25s ease-out',
+      zIndex: 6, pointerEvents: 'none',
     }} />
 
     <div ref={outerRef} style={{ width: '100%', height: '100%', perspective: `${PERSPECTIVE}px`, overflow: 'hidden' }}>
