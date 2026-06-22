@@ -120,7 +120,7 @@ export default function StartPage() {
             filter: 'sepia(0.28) contrast(1.06) brightness(0.82) saturate(0.65) hue-rotate(-6deg)',
           }}
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="https://n6vkksjxda93kdi5.public.blob.vercel-storage.com/hero.mp4" type="video/mp4" />
         </video>
 
         {/* 필름 베이스 포그 — 블랙 리프트 (필름은 순수 검정이 없다) */}
