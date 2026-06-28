@@ -6,7 +6,6 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import SiteNav from '@/components/SiteNav';
 import { NORIGAE_CURSOR } from '@/lib/cursor';
-import { SOCIAL_LINKS } from '@/lib/constants';
 
 const MENU_ITEMS = [
   { num: '01', name: '된장전골', en: 'DOENJANG JJEONGOL', desc: '50년 비밀 된장 레시피', price: '13,000', img: '/menu-된장전골.jpg', imgPos: 'center 50%', href: '/menu/doenjang' },
@@ -770,42 +769,6 @@ export default function StartPage() {
         </div>
       </section>
 
-      {/* ── 소셜 링크 (우측 상단 고정) ──────────────────────── */}
-      <div className="soc-links" style={{
-        position: 'fixed', top: 0, right: 28,
-        height: 64,
-        display: 'flex', flexDirection: 'row', alignItems: 'center',
-        gap: 24, zIndex: 600,
-      }}>
-        {SOCIAL_LINKS.map(({ ko, en, href }) => (
-          <a
-            key={en}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-              textDecoration: 'none',
-              color: 'rgba(255,255,255,0.55)',
-              transition: 'color 0.2s',
-              cursor: 'pointer',
-            }}
-            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#fff'}
-            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.55)'}
-          >
-            <span style={{
-              fontFamily: "'Noto Sans KR', sans-serif",
-              fontSize: 16, fontWeight: 600, letterSpacing: '0.04em', lineHeight: 1,
-            }}>{ko}</span>
-            <span style={{
-              fontFamily: 'sans-serif',
-              fontSize: 10, fontWeight: 400, letterSpacing: '0.2em', lineHeight: 1,
-              opacity: 0.65,
-            }}>{en}</span>
-          </a>
-        ))}
-      </div>
-
       {/* ── 예약 플로팅 위젯 (마우스 접근 시 확장) ─────────── */}
       <div
         className="rsv-widget"
@@ -965,7 +928,6 @@ export default function StartPage() {
           .hero-bottom { bottom: 72px !important; }
         }
 
-        /* 메뉴 4패널 → 2×2 그리드 */
         @media (max-width: 768px) {
           .menu-section { height: auto !important; }
           .menu-strip {
@@ -983,10 +945,6 @@ export default function StartPage() {
             overflow: hidden !important;
           }
           .menu-card > div { height: 100% !important; }
-        }
-
-        /* 소개 섹션 그리드 → 1열 */
-        @media (max-width: 768px) {
           .about-content-wrap {
             grid-template-columns: 1fr !important;
             padding-left: 24px !important;
@@ -995,10 +953,6 @@ export default function StartPage() {
           .about-body-text { font-size: 15px !important; line-height: 1.85 !important; }
           .about-sign-text { font-size: 14px !important; }
           .about-person-name { font-size: 18px !important; }
-        }
-
-        /* 위치 섹션 그리드 → 1열 */
-        @media (max-width: 768px) {
           .loc-grid {
             grid-template-columns: 1fr !important;
             padding: 60px 24px 60px !important;
@@ -1008,13 +962,6 @@ export default function StartPage() {
           .loc-hour-row span { font-size: 16px !important; }
           .loc-transport p { font-size: 15px !important; }
           .loc-phone { font-size: 17px !important; }
-        }
-
-        /* 소셜 링크 → 네비게이션 링크와 겹치므로 전체 숨김 */
-        .soc-links { display: none !important; }
-
-        /* 예약 위젯 → 모바일 숨김, 하단 바 표시 */
-        @media (max-width: 768px) {
           .rsv-widget { display: none !important; }
           .rsv-mobile-cta { display: block !important; }
         }

@@ -113,7 +113,6 @@ export default function MenuPage() {
         @media (max-width: 480px) {
           .cat-grid { grid-template-columns: 1fr !important; }
           .cat-grid > div { border-right: none !important; }
-          .cat-grid > div:nth-child(even) { border-right: none !important; }
         }
       `}</style>
     </main>

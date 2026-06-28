@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SOCIAL_LINKS } from '@/lib/constants';
@@ -16,6 +16,7 @@ export default function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -29,6 +30,27 @@ export default function SiteNav() {
   }, []);
 
   useEffect(() => { setMenuOpen(false); }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   return (
     <>
@@ -62,14 +84,11 @@ export default function SiteNav() {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
+              className="sitenav-link"
               style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
                 textDecoration: 'none',
-                color: 'rgba(255,255,255,0.55)',
-                transition: 'color 0.2s',
               }}
-              onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e'}
-              onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.55)'}
             >
               <span style={{
                 fontFamily: "'Noto Sans KR', sans-serif",
@@ -89,6 +108,7 @@ export default function SiteNav() {
           className="sitenav-hamburger"
           onClick={() => setMenuOpen(v => !v)}
           aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}
+          aria-expanded={menuOpen}
           style={{
             display: 'none',
             background: 'none', border: 'none',
@@ -120,7 +140,9 @@ export default function SiteNav() {
 
       {/* 모바일 드롭다운 메뉴 */}
       <div
+        ref={menuRef}
         className="sitenav-mobile-menu"
+        aria-hidden={!menuOpen}
         style={{
           position: 'fixed', top: 64, left: 0, right: 0, zIndex: 499,
           background: 'rgba(10,10,10,0.97)',
@@ -139,6 +161,7 @@ export default function SiteNav() {
             key={href}
             href={href}
             onClick={() => setMenuOpen(false)}
+            tabIndex={menuOpen ? undefined : -1}
             style={{
               fontFamily: "'Noto Sans KR', sans-serif",
               fontSize: 18,
@@ -157,6 +180,7 @@ export default function SiteNav() {
         <Link
           href="/reservation"
           onClick={() => setMenuOpen(false)}
+          tabIndex={menuOpen ? undefined : -1}
           style={{
             display: 'block', marginTop: 18,
             padding: '13px 0', textAlign: 'center',
@@ -172,6 +196,9 @@ export default function SiteNav() {
       </div>
 
       <style>{`
+        .sitenav-link { color: rgba(255,255,255,0.55); transition: color 0.2s; }
+        .sitenav-link:hover { color: #c8a96e; }
+        .sitenav-hamburger:focus-visible { outline: 2px solid #c8a96e; outline-offset: 4px; }
         @media (max-width: 768px) {
           .sitenav-links { display: none !important; }
           .sitenav-hamburger { display: flex !important; }
