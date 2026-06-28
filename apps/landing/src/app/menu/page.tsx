@@ -19,7 +19,7 @@ export default function MenuPage() {
         }}>대표 메뉴</h1>
       </div>
 
-      <div style={{
+      <div className="cat-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)',
         padding: '0 clamp(32px, 6vw, 80px) 80px',
@@ -95,6 +95,27 @@ export default function MenuPage() {
         * 모든 메뉴는 국내산 재료를 사용합니다.<br />
         * 가격 및 메뉴는 시즌에 따라 변경될 수 있습니다.
       </p>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .cat-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+          }
+          .cat-grid > div {
+            border-right: 1px solid rgba(200,169,110,0.1) !important;
+            border-bottom: 1px solid rgba(200,169,110,0.1) !important;
+            padding: 28px 20px !important;
+          }
+          .cat-grid > div:nth-child(even) { border-right: none !important; }
+        }
+        @media (max-width: 480px) {
+          .cat-grid { grid-template-columns: 1fr !important; }
+          .cat-grid > div { border-right: none !important; }
+          .cat-grid > div:nth-child(even) { border-right: none !important; }
+        }
+      `}</style>
     </main>
   );
 }

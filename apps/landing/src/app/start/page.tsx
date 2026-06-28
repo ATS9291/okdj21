@@ -185,17 +185,16 @@ export default function StartPage() {
         }} />
 
         {/* 슬로건 (하단) */}
-        <div ref={titleRef} style={{
+        <div ref={titleRef} className="hero-bottom" style={{
           position: 'absolute', bottom: 100, left: 0, right: 0,
           textAlign: 'center',
           opacity: 0,
         }}>
-          <h1 style={{
+          <h1 className="hero-h1" style={{
             fontFamily: "'Noto Sans KR', sans-serif",
             fontSize: 'clamp(36px, 4.6vw, 60px)',
             fontWeight: 800,
             letterSpacing: '0.06em', lineHeight: 1.2,
-            whiteSpace: 'nowrap',
             margin: 0,
             color: '#c8a96e',
             textShadow: '0 2px 32px rgba(0,0,0,0.7), 0 0 60px rgba(200,169,110,0.25)',
@@ -216,7 +215,7 @@ export default function StartPage() {
       </section>
 
       {/* ── 대표 메뉴 (seed.com 스타일 4패널) ──────────────── */}
-      <section style={{
+      <section className="menu-section" style={{
         position: 'relative', width: '100%', height: '100vh',
         display: 'flex', flexDirection: 'column',
         background: '#0a0a0a',
@@ -232,7 +231,7 @@ export default function StartPage() {
           }}>대표 메뉴</h2>
         </div>
 
-        <div style={{ flex: 1, display: 'flex', marginTop: 28 }}>
+        <div className="menu-strip" style={{ flex: 1, display: 'flex', marginTop: 28 }}>
           {MENU_ITEMS.map((item, i) => {
             const isHovered = hoveredMenu === i;
             const tx = isHovered ? tilt.x : 0;
@@ -241,6 +240,7 @@ export default function StartPage() {
               <Link
                 key={item.name}
                 href={item.href}
+                className="menu-card"
                 onMouseEnter={() => setHoveredMenu(i)}
                 onMouseLeave={handleCardLeave}
                 onMouseMove={handleCardMouseMove}
@@ -406,7 +406,7 @@ export default function StartPage() {
             </span>
 
             {isAbout ? (
-              <div style={{
+              <div className="about-content-wrap" style={{
                 position: 'relative', zIndex: 1,
                 width: '100%',
                 paddingLeft: 0,
@@ -455,7 +455,7 @@ export default function StartPage() {
                       border: '1px solid rgba(200,169,110,0.4)',
                       padding: '4px 10px', borderRadius: 2,
                     }}>대표</span>
-                    <span style={{
+                    <span className="about-person-name" style={{
                       fontFamily: "'Noto Sans KR', sans-serif",
                       fontSize: 25, fontWeight: 500, color: '#fff',
                       letterSpacing: '0.08em',
@@ -473,7 +473,7 @@ export default function StartPage() {
                     손님으로 처음 맛본 된장전골 한 그릇이 제 인생을 바꿨습니다.
                   </p>
                   {/* 소개 본문 */}
-                  <p style={{
+                  <p className="about-body-text" style={{
                     fontFamily: "'Noto Sans KR', sans-serif",
                     fontSize: 23, color: 'rgba(255,255,255,0.55)',
                     lineHeight: 2.1, letterSpacing: '0.03em',
@@ -495,7 +495,7 @@ export default function StartPage() {
                   <div style={{ width: 48, height: 1, background: 'rgba(200,169,110,0.35)', marginBottom: 28 }} />
 
                   {/* 서명 */}
-                  <p style={{
+                  <p className="about-sign-text" style={{
                     fontFamily: "'Noto Sans KR', sans-serif",
                     fontSize: 22, color: 'rgba(255,255,255,0.3)',
                     lineHeight: 1.9, letterSpacing: '0.04em',
@@ -625,7 +625,7 @@ export default function StartPage() {
         }}>03</span>
 
         {/* 2단 레이아웃 */}
-        <div style={{
+        <div className="loc-grid" style={{
           position: 'relative', zIndex: 1,
           width: '100%',
           padding: '80px clamp(40px, 9vw, 140px)',
@@ -635,7 +635,7 @@ export default function StartPage() {
           alignItems: 'center',
         }}>
           {/* 왼쪽: 텍스트 정보 */}
-          <div>
+          <div className="loc-info">
             <p style={{ fontFamily: 'sans-serif', fontSize: 21, letterSpacing: '0.3em', color: '#c8a96e', marginBottom: 18 }}>
               LOCATION
             </p>
@@ -655,6 +655,7 @@ export default function StartPage() {
                 href="https://naver.me/GkR3y2cn"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="loc-addr"
                 style={{
                   fontFamily: "'Noto Sans KR', sans-serif", fontSize: 25, color: '#fff', lineHeight: 1.7,
                   textDecoration: 'underline', textUnderlineOffset: 4, transition: 'color 0.2s', display: 'inline-block',
@@ -674,7 +675,7 @@ export default function StartPage() {
                   { day: '매일', time: '11:00 — 22:00' },
                   { day: '쉬는시간', time: '없음' },
                 ].map(({ day, time }) => (
-                  <div key={day} style={{ display: 'flex', justifyContent: 'space-between', maxWidth: 300 }}>
+                  <div key={day} className="loc-hour-row" style={{ display: 'flex', justifyContent: 'space-between', maxWidth: 300 }}>
                     <span style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 23, color: 'rgba(255,255,255,0.45)' }}>{day}</span>
                     <span style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 23, color: '#fff' }}>{time}</span>
                   </div>
@@ -685,7 +686,7 @@ export default function StartPage() {
             {/* 교통 및 주차 */}
             <div style={{ marginBottom: 40 }}>
               <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 20, letterSpacing: '0.25em', color: '#c8a96e', marginBottom: 10 }}>교통 및 주차</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div className="loc-transport" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <p style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: 23, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7 }}>
                   🚇 지하철 3호선 양재역 1번출구 도보 7분
                 </p>
@@ -722,6 +723,7 @@ export default function StartPage() {
             {/* 전화 */}
             <a
               href="tel:07086572499"
+              className="loc-phone"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
                 fontFamily: "'Noto Sans KR', sans-serif",
@@ -769,7 +771,7 @@ export default function StartPage() {
       </section>
 
       {/* ── 소셜 링크 (우측 상단 고정) ──────────────────────── */}
-      <div style={{
+      <div className="soc-links" style={{
         position: 'fixed', top: 0, right: 28,
         height: 64,
         display: 'flex', flexDirection: 'row', alignItems: 'center',
@@ -806,6 +808,7 @@ export default function StartPage() {
 
       {/* ── 예약 플로팅 위젯 (마우스 접근 시 확장) ─────────── */}
       <div
+        className="rsv-widget"
         style={{
           position: 'fixed', right: 0, top: '50%',
           transform: 'translateY(-50%)',
@@ -895,6 +898,30 @@ export default function StartPage() {
         </div>
       </div>
 
+      {/* ── 모바일 전용 예약 하단 바 ─────────────────────────── */}
+      <Link
+        href="/reservation"
+        className="rsv-mobile-cta"
+        style={{
+          display: 'none',
+          position: 'fixed', bottom: 0, left: 0, right: 0,
+          zIndex: 300,
+          padding: '16px 24px',
+          background: '#c8a96e',
+          textAlign: 'center',
+          fontFamily: "'Noto Sans KR', sans-serif",
+          fontSize: 16, fontWeight: 700,
+          color: '#0a0a0a', textDecoration: 'none',
+          letterSpacing: '0.08em',
+          opacity: showWidget ? 1 : 0,
+          pointerEvents: showWidget ? 'auto' : 'none',
+          transition: 'opacity 0.45s ease',
+          borderTop: '1px solid rgba(0,0,0,0.15)',
+        }}
+      >
+        테이블 예약하기 →
+      </Link>
+
       <style>{`
         @keyframes bob {
           0%, 100% { transform: translateX(-50%) translateY(0); }
@@ -924,6 +951,72 @@ export default function StartPage() {
           50%  { background-position: 112px 0; }
           75%  { background-position: -90px 0; }
           100% { background-position: 30px 0; }
+        }
+
+        /* ── 반응형 ─────────────────────────────────────────── */
+
+        /* 히어로 타이틀 */
+        @media (max-width: 640px) {
+          .hero-h1 {
+            white-space: normal !important;
+            font-size: clamp(22px, 7vw, 32px) !important;
+            padding: 0 20px;
+          }
+          .hero-bottom { bottom: 72px !important; }
+        }
+
+        /* 메뉴 4패널 → 2×2 그리드 */
+        @media (max-width: 768px) {
+          .menu-section { height: auto !important; }
+          .menu-strip {
+            display: grid !important;
+            flex: none !important;
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: repeat(2, 48vw) !important;
+            margin-top: 8px !important;
+          }
+          .menu-card {
+            flex: none !important;
+            height: auto !important;
+            border-right: none !important;
+            border-bottom: 1px solid rgba(200,169,110,0.08) !important;
+            overflow: hidden !important;
+          }
+          .menu-card > div { height: 100% !important; }
+        }
+
+        /* 소개 섹션 그리드 → 1열 */
+        @media (max-width: 768px) {
+          .about-content-wrap {
+            grid-template-columns: 1fr !important;
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+          }
+          .about-body-text { font-size: 15px !important; line-height: 1.85 !important; }
+          .about-sign-text { font-size: 14px !important; }
+          .about-person-name { font-size: 18px !important; }
+        }
+
+        /* 위치 섹션 그리드 → 1열 */
+        @media (max-width: 768px) {
+          .loc-grid {
+            grid-template-columns: 1fr !important;
+            padding: 60px 24px 60px !important;
+            gap: 40px !important;
+          }
+          .loc-addr { font-size: 17px !important; }
+          .loc-hour-row span { font-size: 16px !important; }
+          .loc-transport p { font-size: 15px !important; }
+          .loc-phone { font-size: 17px !important; }
+        }
+
+        /* 소셜 링크 → 네비게이션 링크와 겹치므로 전체 숨김 */
+        .soc-links { display: none !important; }
+
+        /* 예약 위젯 → 모바일 숨김, 하단 바 표시 */
+        @media (max-width: 768px) {
+          .rsv-widget { display: none !important; }
+          .rsv-mobile-cta { display: block !important; }
         }
       `}</style>
     </main>
