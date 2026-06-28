@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { SOCIAL_LINKS } from '@/lib/constants';
 
 const NAV_LINKS = [
   { label: '메뉴', href: '/menu' },
@@ -53,24 +54,33 @@ export default function SiteNav() {
           옥된장양재점
         </Link>
 
-        {/* 데스크톱 네비게이션 */}
-        <div className="sitenav-links" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          {NAV_LINKS.map(({ label, href }) => (
-            <Link
-              key={href}
+        {/* 데스크톱 소셜 링크 */}
+        <div className="sitenav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          {SOCIAL_LINKS.map(({ ko, en, href }) => (
+            <a
+              key={en}
               href={href}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                fontFamily: "'Noto Sans KR', sans-serif",
-                fontSize: 14,
-                fontWeight: pathname === href ? 600 : 400,
-                color: pathname === href ? '#c8a96e' : 'rgba(255,255,255,0.72)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
                 textDecoration: 'none',
-                letterSpacing: '0.06em',
+                color: 'rgba(255,255,255,0.55)',
                 transition: 'color 0.2s',
               }}
+              onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#c8a96e'}
+              onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.55)'}
             >
-              {label}
-            </Link>
+              <span style={{
+                fontFamily: "'Noto Sans KR', sans-serif",
+                fontSize: 13, fontWeight: 600, letterSpacing: '0.04em', lineHeight: 1,
+              }}>{ko}</span>
+              <span style={{
+                fontFamily: 'sans-serif',
+                fontSize: 9, letterSpacing: '0.2em', lineHeight: 1,
+                opacity: 0.6,
+              }}>{en}</span>
+            </a>
           ))}
         </div>
 
