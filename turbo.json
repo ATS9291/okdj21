@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["RESEND_API_KEY", "ERROR_NOTIFY_EMAIL"],
+  "globalEnv": ["RESEND_API_KEY", "ERROR_NOTIFY_EMAIL", "ADMIN_PASSWORD", "ADMIN_EMAIL", "BLOB_READ_WRITE_TOKEN"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
